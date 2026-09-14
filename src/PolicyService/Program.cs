@@ -1,4 +1,5 @@
 using PolicyService.Services;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,11 +7,19 @@ builder.Services.AddSingleton<PolicyService.Services.PolicyService>();
 
 var app = builder.Build();
 
-app.MapGet("/health", () =>
+app.MapGet("/health", (IConfiguration configuration) =>
 {
+    var version = Assembly
+        .GetExecutingAssembly()
+        .GetName()
+        .Version?
+        .ToString();
+
     return Results.Ok(new
     {
         status = "Healthy",
+        environment = configuration["EnvironmentSerttings:DisplayName"],
+        version,
         timestamp = DateTimeOffset.UtcNow
     });
 });
