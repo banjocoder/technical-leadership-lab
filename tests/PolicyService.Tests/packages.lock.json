@@ -149,6 +149,7 @@
           "Microsoft.AspNetCore.OpenApi": "[9.0.17, )"
         }
       }
-    }
+    },
+    "net9.0/win-x64": {}
   }
 }
