@@ -1,0 +1,146 @@
+name: PolicyService CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    env:
+      VERSION_PREFIX: "0.2"
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Calculate artifact version
+        shell: pwsh
+        run: |
+          $version = "$env:VERSION_PREFIX.${{ github.run_number }}"
+          $commit = "${{ github.sha }}"
+          $shortCommit = $commit.Substring(0, 8)
+
+          Write-Host "Application version: $version"
+          Write-Host "Source revision: $commit"
+          Write-Host "Short revision: $shortCommit"
+
+          "APP_VERSION=$version" >> $env:GITHUB_ENV
+          "SHORT_COMMIT=$shortCommit" >> $env:GITHUB_ENV
+
+      - name: Restore
+        shell: pwsh
+        run: |
+          dotnet restore --locked-mode
+
+          if ($LASTEXITCODE -ne 0) {
+            exit $LASTEXITCODE
+          }
+
+      - name: Compile
+        shell: pwsh
+        run: |
+          dotnet build `
+            --configuration Release `
+            --no-restore `
+            -p:Version=$env:APP_VERSION `
+            -p:SourceRevisionId=${{ github.sha }}
+
+          if ($LASTEXITCODE -ne 0) {
+            exit $LASTEXITCODE
+          }
+
+      - name: Unit Tests
+        shell: pwsh
+        run: |
+          dotnet test `
+            --configuration Release `
+            --no-build
+
+          if ($LASTEXITCODE -ne 0) {
+            exit $LASTEXITCODE
+          }
+
+      - name: Publish Application
+        shell: pwsh
+        run: |
+          $publishPath = "$env:GITHUB_WORKSPACE\artifacts\publish"
+
+          Remove-Item "$env:GITHUB_WORKSPACE\artifacts" `
+            -Recurse `
+            -Force `
+            -ErrorAction SilentlyContinue
+
+          New-Item `
+            -ItemType Directory `
+            -Path $publishPath `
+            -Force | Out-Null
+
+          dotnet publish `
+            "$env:GITHUB_WORKSPACE\src\PolicyService\PolicyService.csproj" `
+            --configuration Release `
+            --no-build `
+            --no-restore `
+            --output $publishPath
+
+          if ($LASTEXITCODE -ne 0) {
+            exit $LASTEXITCODE
+          }
+
+      - name: Package Artifact
+        shell: pwsh
+        run: |
+          $publishPath = "$env:GITHUB_WORKSPACE\artifacts\publish"
+          $artifactPath = "$env:GITHUB_WORKSPACE\artifacts\package"
+
+          New-Item `
+            -ItemType Directory `
+            -Path $artifactPath `
+            -Force | Out-Null
+
+          $metadata = [ordered]@{
+            artifact          = "PolicyService"
+            version           = $env:APP_VERSION
+            pipelineRun       = "${{ github.run_number }}"
+            sourceRevision    = "${{ github.sha }}"
+            sourceBranch      = "${{ github.ref }}"
+            targetFramework   = "net9.0"
+            runtimeIdentifier = "win-x64"
+            selfContained     = $true
+            sdkVersion        = (dotnet --version)
+          }
+
+          $metadata |
+            ConvertTo-Json |
+            Set-Content "$publishPath\artifact-manifest.json"
+
+          $artifactName = "PolicyService-$env:APP_VERSION-$env:SHORT_COMMIT.zip"
+          $zipPath = Join-Path $artifactPath $artifactName
+
+          Compress-Archive `
+            -Path "$publishPath\*" `
+            -DestinationPath $zipPath
+
+          $hash = Get-FileHash $zipPath -Algorithm SHA256
+
+          "$($hash.Hash)  $artifactName" |
+            Set-Content "$zipPath.sha256"
+
+          Write-Host "Artifact: $artifactName"
+          Write-Host "SHA256:   $($hash.Hash)"
+
+      - name: Publish Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PolicyService
+          path: artifacts/package/
