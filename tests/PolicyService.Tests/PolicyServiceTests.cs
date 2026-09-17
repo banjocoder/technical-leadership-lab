@@ -46,4 +46,10 @@ public class PolicyServiceTests
 
         Assert.IsNull(result);
     }
+
+    [TestMethod]
+    public void IntentionalFailure()
+    {
+        Assert.AreEqual(1, 2);
+    }
 }
