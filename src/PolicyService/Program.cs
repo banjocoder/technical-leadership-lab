@@ -18,7 +18,7 @@ app.MapGet("/health", (IConfiguration configuration) =>
     return Results.Ok(new
     {
         status = "Healthy",
-        environment = configuration["EnvironmentSerttings:DisplayName"],
+        environment = configuration["EnvironmentSettings:DisplayName"],
         version,
         timestamp = DateTimeOffset.UtcNow
     });
