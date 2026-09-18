@@ -73,9 +73,6 @@ Record your answers, then check them against the general responses below.
 
 * * *
 
-**ChatGPT:**
-
-Your instincts are mostly on target. The useful part of this exercise is separating **what influences the artifact** from **what controls when the build happens**.
 
 The Week 2 lab specifically wants a tested, traceable artifact, with environment-specific configuration kept out of it, and later asks you to reason about implicit self-hosted-agent dependencies.
 
