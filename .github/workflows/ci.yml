@@ -122,6 +122,7 @@ jobs:
           $metadata = [ordered]@{
             artifact          = "PolicyService"
             version           = $env:APP_VERSION
+            buildTimeUtc      = (Get-Date).ToUniversalTime().ToString('o')
             pipelineRun       = "${{ github.run_number }}"
             sourceRevision    = "${{ github.sha }}"
             sourceBranch      = "${{ github.ref }}"
@@ -155,3 +156,105 @@ jobs:
         with:
           name: PolicyService
           path: artifacts/package/
+  
+  deploy-dev:
+    needs: build
+    runs-on: windows-latest
+    steps:
+      - name: Provision DEV database
+        shell: pwsh
+        run: |
+          sqllocaldb create MSSQLLocalDB 2>$null   # no-op if it already exists
+          sqllocaldb start  MSSQLLocalDB
+          sqlcmd -S "(localdb)\MSSQLLocalDB" -Q "IF DB_ID('PolicyDb') IS NULL CREATE DATABASE PolicyDb;"
+          
+      - name: Checkout source        # needed for scripts/record-readiness.ps1
+        uses: actions/checkout@v7
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: PolicyService
+          path: incoming
+
+      - name: Verify integrity and expand
+        shell: pwsh
+        run: |
+          $zip = Get-ChildItem incoming\*.zip | Select-Object -First 1
+          $expected = (Get-Content "$($zip.FullName).sha256").Split(' ')[0]
+          $actual   = (Get-FileHash $zip.FullName -Algorithm SHA256).Hash
+          if ($actual -ne $expected) {
+            Write-Error "Artifact hash mismatch. Refusing to deploy."; exit 1
+          }
+          Expand-Archive $zip.FullName -DestinationPath app -Force
+          "ARTIFACT_ZIP=$($zip.BaseName)" >> $env:GITHUB_ENV
+
+      - name: Carry provenance forward from the artifact
+        shell: pwsh
+        run: |
+          $m = Get-Content app\artifact-manifest.json | ConvertFrom-Json
+          "ARTIFACT_ID=$env:ARTIFACT_ZIP"          >> $env:GITHUB_ENV
+          "ARTIFACT_VERSION=$($m.version)"          >> $env:GITHUB_ENV
+          "ARTIFACT_BUILD_TIME=$($m.buildTimeUtc)"  >> $env:GITHUB_ENV
+          "ARTIFACT_COMMIT=$($m.sourceRevision)"    >> $env:GITHUB_ENV
+          "ARTIFACT_BRANCH=$($m.sourceBranch)"      >> $env:GITHUB_ENV
+
+      - name: Inject DEV config and start the app
+        shell: pwsh
+        run: |
+          # environment-specific values injected at deploy time — the artifact stays inert
+          $env:ASPNETCORE_URLS               = "http://localhost:5006"
+          $env:ASPNETCORE_ENVIRONMENT        = "Development"
+          $env:EnvironmentSettings__DisplayName = "DEV"
+          $env:Readiness__RequireDatabase        = "true"
+          $env:ConnectionStrings__PolicyDatabase = "Server=(localdb)\MSSQLLocalDB;Database=PolicyDb;Integrated Security=true;Connect Timeout=3"
+          Start-Process -FilePath "app\PolicyService.exe" -PassThru | Out-Null
+
+      - name: Wait for liveness
+        id: liveness
+        shell: pwsh
+        run: |
+          $live = $false
+          foreach ($i in 1..30) {
+            try {
+              $r = Invoke-WebRequest http://localhost:5006/health -SkipHttpErrorCheck -TimeoutSec 2
+              if ($r.StatusCode -eq 200) { $live = $true; break }
+            } catch { }
+            Start-Sleep -Seconds 1
+          }
+          "live=$($live.ToString().ToLower())" >> $env:GITHUB_OUTPUT
+          if (-not $live) { Write-Host "App never became live within timeout." }
+
+      - name: Capture readiness and record provenance
+        id: record
+        if: always()
+        shell: pwsh
+        run: |
+          if ('${{ steps.liveness.outputs.live }}' -eq 'true') {
+            ./scripts/record-readiness.ps1 -BaseUrl http://localhost:5006 -TargetEnvironment DEV -OutFile artifacts/deploy-metadata-DEV.json -ExecutionResult Succeeded
+          } else {
+            ./scripts/record-readiness.ps1 -BaseUrl http://localhost:5006 -TargetEnvironment DEV -OutFile artifacts/deploy-metadata-DEV.json -ExecutionResult Failed -FailureReason "App never became live within timeout"
+          }
+
+      - name: Upload provenance record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: deploy-metadata-DEV
+          path: artifacts/deploy-metadata-DEV.json
+
+      - name: Deployment execution gate
+        shell: pwsh
+        run: |
+          if ('${{ steps.record.outputs.executionResult }}' -ne 'Succeeded') {
+            Write-Error "Deployment execution Failed. See provenance record."; exit 1
+          }
+
+      - name: Readiness gate
+        shell: pwsh
+        run: |
+          if ('${{ steps.record.outputs.outcome }}' -ne 'Ready') {
+            Write-Error "Environment NotReady (httpStatus=${{ steps.record.outputs.httpStatus }})."; exit 1
+          }
+
+  #deploy-qa:      
