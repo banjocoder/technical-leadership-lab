@@ -161,7 +161,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: windows-latest
-    envioronment: DEV
+    environment: DEV
     steps:
       - name: Checkout source        # needed for scripts/record-readiness.ps1
         uses: actions/checkout@v7
