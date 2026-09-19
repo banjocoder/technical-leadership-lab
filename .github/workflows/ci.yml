@@ -162,12 +162,12 @@ jobs:
     needs: build
     runs-on: windows-latest
     steps:
-      # - name: Provision DEV database
-      #   shell: pwsh
-      #   run: |
-      #     sqllocaldb create MSSQLLocalDB 2>$null   # no-op if it already exists
-      #     sqllocaldb start  MSSQLLocalDB
-      #     sqlcmd -S "(localdb)\MSSQLLocalDB" -Q "IF DB_ID('PolicyDb') IS NULL CREATE DATABASE PolicyDb;"
+      - name: Provision DEV database
+        shell: pwsh
+        run: |
+          sqllocaldb create MSSQLLocalDB 2>$null   # no-op if it already exists
+          sqllocaldb start  MSSQLLocalDB
+          sqlcmd -S "(localdb)\MSSQLLocalDB" -Q "IF DB_ID('PolicyDb') IS NULL CREATE DATABASE PolicyDb;"
 
       - name: Checkout source        # needed for scripts/record-readiness.ps1
         uses: actions/checkout@v7
