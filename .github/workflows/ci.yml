@@ -158,6 +158,7 @@ jobs:
           path: artifacts/package/
   
   deploy-dev:
+    if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: windows-latest
     steps:
@@ -200,40 +201,83 @@ jobs:
           "ARTIFACT_BRANCH=$($m.sourceBranch)"      >> $env:GITHUB_ENV
 
       - name: Inject DEV config and start the app
+        id: deployment
         shell: pwsh
         run: |
-          # environment-specific values injected at deploy time — the artifact stays inert
-          $env:ASPNETCORE_URLS               = "http://localhost:5006"
-          $env:ASPNETCORE_ENVIRONMENT        = "Development"
-          $env:EnvironmentSettings__DisplayName = "DEV"
+          $env:ASPNETCORE_URLS                   = "http://localhost:5006"
+          $env:ASPNETCORE_ENVIRONMENT            = "Development"
+          $env:EnvironmentSettings__DisplayName  = "DEV"
           $env:Readiness__RequireDatabase        = "true"
           $env:ConnectionStrings__PolicyDatabase = "Server=(localdb)\MSSQLLocalDB;Database=PolicyDb;Integrated Security=true;Connect Timeout=3"
-          Start-Process -FilePath "app\PolicyService.exe" -PassThru | Out-Null
+
+          try {
+            $process = Start-Process `
+              -FilePath "app\PolicyService.exe" `
+              -PassThru
+
+            Write-Host "PolicyService process started with PID $($process.Id)"
+
+            "result=Succeeded" >> $env:GITHUB_OUTPUT
+            "failureReason="   >> $env:GITHUB_OUTPUT
+          }
+          catch {
+            Write-Host "Deployment execution failed: $_"
+
+            "result=Failed" >> $env:GITHUB_OUTPUT
+            "failureReason=$($_.Exception.Message)" >> $env:GITHUB_OUTPUT
+          }
 
       - name: Wait for liveness
         id: liveness
+        if: steps.deployment.outputs.result == 'Succeeded'
         shell: pwsh
         run: |
           $live = $false
+
           foreach ($i in 1..30) {
             try {
-              $r = Invoke-WebRequest http://localhost:5006/health -SkipHttpErrorCheck -TimeoutSec 2
-              if ($r.StatusCode -eq 200) { $live = $true; break }
-            } catch { }
+              $r = Invoke-WebRequest `
+                http://localhost:5006/health `
+                -SkipHttpErrorCheck `
+                -TimeoutSec 2
+
+              if ($r.StatusCode -eq 200) {
+                $live = $true
+                break
+              }
+            }
+            catch { }
+
             Start-Sleep -Seconds 1
           }
+
           "live=$($live.ToString().ToLower())" >> $env:GITHUB_OUTPUT
-          if (-not $live) { Write-Host "App never became live within timeout." }
+
+          if (-not $live) {
+            Write-Host "Application did not become live within timeout."
+          }
 
       - name: Capture readiness and record provenance
         id: record
         if: always()
         shell: pwsh
         run: |
-          if ('${{ steps.liveness.outputs.live }}' -eq 'true') {
-            ./scripts/record-readiness.ps1 -BaseUrl http://localhost:5006 -TargetEnvironment DEV -OutFile artifacts/deploy-metadata-DEV.json -ExecutionResult Succeeded
-          } else {
-            ./scripts/record-readiness.ps1 -BaseUrl http://localhost:5006 -TargetEnvironment DEV -OutFile artifacts/deploy-metadata-DEV.json -ExecutionResult Failed -FailureReason "App never became live within timeout"
+          $executionResult = '${{ steps.deployment.outputs.result }}'
+
+          if ($executionResult -eq 'Succeeded') {
+            ./scripts/record-readiness.ps1 `
+              -BaseUrl http://localhost:5006 `
+              -TargetEnvironment DEV `
+              -OutFile artifacts/deploy-metadata-DEV.json `
+              -ExecutionResult Succeeded
+          }
+          else {
+            ./scripts/record-readiness.ps1 `
+              -BaseUrl http://localhost:5006 `
+              -TargetEnvironment DEV `
+              -OutFile artifacts/deploy-metadata-DEV.json `
+              -ExecutionResult Failed `
+              -FailureReason '${{ steps.deployment.outputs.failureReason }}'
           }
 
       - name: Upload provenance record
