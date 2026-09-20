@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<PolicyService.Services.PolicyService>();
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
@@ -28,7 +29,8 @@ app.MapGet("/health", (IConfiguration configuration) =>
 
 app.MapGet("/readiness", async (
     IConfiguration configuration,
-    PolicyService.Services.PolicyService policyService) =>
+    PolicyService.Services.PolicyService policyService,
+    IHttpClientFactory httpClientFactory) =>
 {
     var displayName = configuration["EnvironmentSettings:DisplayName"];
 
@@ -84,6 +86,33 @@ app.MapGet("/readiness", async (
         checks.Add(new(
             Name: "policy-smoke-test",
             Category: CheckCategory.Workflow,
+            Enforcement: Enforcement.Blocking,
+            Result: result,
+            Detail: detail));
+    }
+
+    var requireExternalDependency = configuration.GetValue<bool>("Readiness:RequireExternalDependency");
+
+    if (!requireExternalDependency)
+    {
+        checks.Add(new(
+            Name: "external-dependency",
+            Category: CheckCategory.Dependency,
+            Enforcement: Enforcement.Conditional,
+            Result: CheckResult.Skipped,
+            Detail: "External dependency not required for this deployment scope"));
+    }
+    else
+    {
+        var dependencyUrl = configuration["ExternalDependency:Url"];
+
+        var (result, detail) = await CheckExternalDependencyAsync(
+            httpClientFactory,
+            dependencyUrl);
+
+        checks.Add(new(
+            Name: "external-dependency",
+            Category: CheckCategory.Dependency,
             Enforcement: Enforcement.Blocking,
             Result: result,
             Detail: detail));
@@ -150,6 +179,54 @@ static async Task<(CheckResult Result, string Detail)> CheckDatabaseAsync(
     catch (Exception ex)
     {
         return (CheckResult.Fail, $"Database connection failed: {ex.Message}");
+    }
+}
+
+static async Task<(CheckResult Result, string Detail)>
+    CheckExternalDependencyAsync(
+        IHttpClientFactory httpClientFactory,
+        string? dependencyUrl)
+{
+    if (string.IsNullOrWhiteSpace(dependencyUrl))
+    {
+        return (
+            CheckResult.Fail,
+            "ExternalDependency:Url is not configured");
+    }
+
+    if (!Uri.TryCreate(
+        dependencyUrl,
+        UriKind.Absolute,
+        out var uri))
+    {
+        return (
+            CheckResult.Fail,
+            $"ExternalDependency:Url is invalid: '{dependencyUrl}'");
+    }
+
+    try
+    {
+        var client = httpClientFactory.CreateClient();
+        client.Timeout = TimeSpan.FromSeconds(2);
+
+        using var response = await client.GetAsync(uri);
+
+        if (response.IsSuccessStatusCode)
+        {
+            return (
+                CheckResult.Pass,
+                $"Dependency responded with HTTP {(int)response.StatusCode}");
+        }
+
+        return (
+            CheckResult.Fail,
+            $"Dependency returned HTTP {(int)response.StatusCode}");
+    }
+    catch (Exception ex)
+    {
+        return (
+            CheckResult.Fail,
+            $"Dependency unavailable: {ex.GetType().Name}: {ex.Message}");
     }
 }
 
