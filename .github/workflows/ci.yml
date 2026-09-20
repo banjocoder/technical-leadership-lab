@@ -210,6 +210,7 @@ jobs:
           $env:EnvironmentSettings__DisplayName  = "DEV"
           $env:Readiness__RequireDatabase        = "true"
           $env:ConnectionStrings__PolicyDatabase = "Server=(localdb)\MSSQLLocalDB;Database=PolicyDb;Integrated Security=true;Connect Timeout=3"
+          $env:Readiness__RequireExternalDependency = "false"
 
           try {
             $process = Start-Process `
@@ -364,9 +365,11 @@ jobs:
         run: |
           $env:ASPNETCORE_URLS                    = "http://localhost:5007"
           $env:ASPNETCORE_ENVIRONMENT             = "Production"
-          $env:EnvironmentSettings__DisplayName   = ""
+          $env:EnvironmentSettings__DisplayName   = "QA"
           $env:Readiness__RequireDatabase         = "true"
           $env:ConnectionStrings__PolicyDatabase  = "Server=(localdb)\MSSQLLocalDB;Database=PolicyQaDb;Integrated Security=true;Connect Timeout=3"
+          $env:Readiness__RequireExternalDependency = "false"
+          $env:ExternalDependency__Url            = "http://localhost:5999/health"
 
           try {
             $process = Start-Process `
