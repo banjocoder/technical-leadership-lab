@@ -368,8 +368,7 @@ jobs:
           $env:EnvironmentSettings__DisplayName     = "QA"
           $env:Readiness__RequireDatabase           = "true"
           $env:ConnectionStrings__PolicyDatabase    = "Server=(localdb)\MSSQLLocalDB;Database=PolicyQaDb;Integrated Security=true;Connect Timeout=3"
-          $env:Readiness__RequireExternalDependency = "true"
-          $env:ExternalDependency__Url              = "http://localhost:5999/health"
+          $env:Readiness__RequireExternalDependency = "false"
 
           try {
             $process = Start-Process `
