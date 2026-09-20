@@ -366,7 +366,7 @@ jobs:
           $env:ASPNETCORE_ENVIRONMENT             = "Production"
           $env:EnvironmentSettings__DisplayName   = "QA"
           $env:Readiness__RequireDatabase         = "true"
-          $env:ConnectionStrings__PolicyDatabase  = "Server=(localdb)\MSSQLLocalDB;Database=PolicyQaDb;Integrated Security=true;Connect Timeout=3"
+          $env:ConnectionStrings__PolicyDatabase  = "Server=(localdb)\MSSQLLocalDB;Database=DBThatDoesNotExist;Integrated Security=true;Connect Timeout=3"
 
           try {
             $process = Start-Process `
