@@ -1,14 +1,16 @@
+using System.Collections.Concurrent;
+using PolicyService.Models;
+
 namespace PolicyService.Services;
 
-public class PolicyService
+public class PolicyStore
 {
-    private readonly Dictionary<int, Policy> _policies = new();
+    private readonly ConcurrentDictionary<int, Policy> _policies = new();
+    private int _lastId;
 
     public Policy CreatePolicy(CreatePolicyRequest request)
     {
-        var nextId = _policies.Count == 0
-            ? 1
-            : _policies.Keys.Max() + 1;
+        var nextId = Interlocked.Increment(ref _lastId);
 
         var policy = new Policy(
             nextId,
@@ -26,13 +28,3 @@ public class PolicyService
         return _policies.GetValueOrDefault(id);
     }
 }
-
-public record CreatePolicyRequest(
-    string PolicyHolderName,
-    string PolicyType);
-
-public record Policy(
-    int Id,
-    string PolicyHolderName,
-    string PolicyType,
-    DateTimeOffset CreatedAt);
