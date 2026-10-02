@@ -1,4 +1,4 @@
-Week 3 Retrospective
+# Week 3 Retrospective
 
 A. What became clearer this week?
 

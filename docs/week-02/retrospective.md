@@ -1,3 +1,5 @@
+# Week 2 Retrospective
+
 1) What became clearer this week?
 The distinction between implicit and explicit dependencies became much clearer, particularly how build agents interact with both. I also developed a better understanding of dependency locking, the different failure boundaries within a CI pipeline, and how intentionally injecting failures can verify that the pipeline stops at the correct stage and prevents invalid artifacts from being published.
 
