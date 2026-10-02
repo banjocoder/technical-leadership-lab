@@ -1,4 +1,4 @@
-# Week 2 Lab
+# Week 2 Lab: Continuous Integration and Reproducible Builds
 
 Week 2 is a good transition from the system-level thinking you did in Week 1 into something concrete: **can we turn a specific source revision into a tested artifact in a way that is repeatable and explainable?**
 
