@@ -21,16 +21,18 @@ The lab is built around a fictional **Policy Service** (an ASP.NET Core Web API)
 ## Repository structure
 
 ```
+diagraming/    # Tools for creating system diagrams using Structurizr
+docs/          # Week-by-week reasoning, ADRs, diagrams, proposals, reliability notes
+  ├── adrs/             # Architecture Decision Records
+  ├── week-01/          # Delivery system map, workbook responses, retrospective
+  ├── week-02/          # Experiments, workbook responses, retrospective
+  ├── week-03/          # Experiments, workbook responses, retrospective
+  └── week-04/          # Decisions, workbook responses, retrospective  
+labs/          # Step-by-step weekly instructions
+pipelines/     # CI/CD pipeline definitions
+scripts/       # build.ps1, record-readiness.ps1
 src/           # PolicyService — the ASP.NET Core Web API under study
 tests/         # PolicyService.Tests — unit tests
-scripts/       # build.ps1, record-readiness.ps1
-pipelines/     # CI/CD pipeline definitions
-docs/          # Week-by-week reasoning, ADRs, diagrams, proposals, reliability notes
-  ├── adrs/          # Architecture Decision Records
-  ├── week-01/       # Delivery system map, workbook responses, retrospective
-  ├── week-02/       # Experiments, workbook responses, retrospective
-  └── week-03/       # Experiments, workbook responses, retrospective
-labs/          # Step-by-step weekly instructions
 ```
 
 ## The Policy Service
