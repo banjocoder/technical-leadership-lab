@@ -1,4 +1,4 @@
-**Week 1**
+# Week 1 Lab
 
 The workbook’s intent is specifically to build **one coherent repository** over the full ten weeks, with each week adding engineering capability and a communication artifact. Week 1 is about reasoning about delivery as an end-to-end system, not merely learning how to write a pipeline.
 
