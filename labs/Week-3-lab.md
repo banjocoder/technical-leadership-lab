@@ -1,4 +1,4 @@
-## Week 3 Lab
+# Week 3 Lab
 
 According to the workbook, **Week 3: Continuous Deployment and Artifact Promotion** is about promoting **one immutable artifact** through DEV and QA while separating **deployment execution** from **environment readiness**. The target is 6–7 hours, with a final portfolio artifact consisting of a **“Deployment Success vs. Environment Readiness” diagram** plus a small **deployment metadata schema**.
 
