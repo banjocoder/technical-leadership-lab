@@ -17,13 +17,17 @@ builder.Services.AddSingleton<IssuanceMetrics>();
 // Explicit local identifier for setup.
 // Later, deployed runs will supply the real artifact version.
 var version = builder.Configuration["Deployment:Version"] ?? "local-dev";
+var sourceRevision =
+    builder.Configuration["Deployment:SourceRevision"] ?? "local-unidentified";
+
 var environment = builder.Environment.EnvironmentName;
 
 Action<ResourceBuilder> configureResource = resource => resource
     .AddService("PolicyService", serviceVersion: version)
     .AddAttributes(new Dictionary<string, object>
     {
-        ["deployment.environment.name"] = environment
+        ["deployment.environment.name"] = environment,
+        ["delivery.source_revision"] = sourceRevision
     });
 
 builder.Logging.AddOpenTelemetry(options =>
