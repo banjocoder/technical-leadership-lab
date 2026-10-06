@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<PolicyStore>();
 builder.Services.AddScoped<ReadinessChecker>();
 builder.Services.AddHttpClient();
+builder.Services.AddScoped<PolicyDatabase>();
 
 var app = builder.Build();
 
