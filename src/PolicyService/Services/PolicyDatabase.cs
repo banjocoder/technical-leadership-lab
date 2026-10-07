@@ -1,4 +1,5 @@
 using Microsoft.Data.SqlClient;
+using System.Diagnostics;
 
 namespace PolicyService.Services;
 
@@ -16,6 +17,7 @@ public sealed class PolicyDatabase(IConfiguration configuration)
         
         // Open a SqlConnection asynchronously.
         await using var connection = new SqlConnection(connectionString);
+        Activity.Current?.SetTag("database.operation.stage", "open_connection");
         await connection.OpenAsync(cancellationToken);
         
         // Execute SELECT 1 asynchronously.
@@ -24,6 +26,7 @@ public sealed class PolicyDatabase(IConfiguration configuration)
             // Bound the command timeout and dispose resources.
             CommandTimeout = 5 // Set an appropriate command timeout in seconds.
         };
+        Activity.Current?.SetTag("database.operation.stage", "execute_query");
         await command.ExecuteScalarAsync(cancellationToken);
     }
 }
