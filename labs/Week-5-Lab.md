@@ -75,9 +75,8 @@ Follow your repository's existing conventions; these paths are suggested:
 | Path | Purpose |
 | --- | --- |
 | `docs/week-05/README.md` | Setup, reading record, runtime workflow, run instructions, and artifact index |
-| `docs/week-05/observability-contract.md` | **Required deliverable:** deployment attributes, correlation, workflow metrics, and error context |
+| `docs/contracts/observability-contract.md` | **Required deliverable:** deployment attributes, correlation, workflow metrics, and error context |
 | `docs/week-05/experiments.md` | Healthy baseline, database failure, telemetry revision, and recovery evidence |
-| `docs/week-05/evidence/` | Sanitized exported telemetry and request results with trace IDs and timestamps |
 | `docs/week-05/retrospective.md` | Knowledge-check answers, reflection prompts, and weekly retrospective |
 | `src/PolicyService/` | Runtime instrumentation and any minimal issuance-path extension |
 | Existing workflow/configuration paths | Deployment identity injection and telemetry capture, where applicable |
@@ -126,7 +125,7 @@ Do not implement alerts just to fill the table. Propose one meaningful alert con
 
 ### C. Starter Observability Contract
 
-Save this scaffold as `docs/week-05/observability-contract.md`. Fill it incrementally using observed records, not assumed output.
+Save this scaffold as `docs/contracts/observability-contract.md`. Fill it incrementally using observed records, not assumed output.
 
 ```markdown
 # PolicyService Observability Contract
