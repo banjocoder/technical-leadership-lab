@@ -4,6 +4,13 @@
 
 Start the app, runn /health and /readiness checks first to establish healthy baeline. Stop just the process that handles the api endpoints and attempt to call the endpoints. 
 
+We will be using postman to run the API calls outside of our IDE environment. 
+
+|Run #| Setup | response status / connection error | request duration |
+|--|--|--|--|
+|1| Policy request while active |  |  |
+|2| Policy request while stopped|  |  |
+
 ## F02
 
 Keep an expected policy ID in a file or test harness outside the API process lets the check request that same policy after restart. Since the current API stores policies only in memory, the check would expose the loss; it wouldn’t restore the policy.
