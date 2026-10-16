@@ -13,29 +13,36 @@ The lab is built around a fictional **Policy Service** (an ASP.NET Core Web API)
 ## Weekly labs
 
 | Week | Focus | Lab | Deliverable |
-|------|-------|-----|-------------|
+|:------|-------|-----|-------------|
 | 1 | Delivery as an end-to-end system | [Week 1 Lab](labs/week-1-lab.md) | [Software Delivery System Map](docs/week-01/delivery-system-map.md) |
 | 2 | Continuous Integration & reproducible builds | [Week 2 Lab](labs/week-2-lab.md) | [ADR-001: Build Artifacts Are Immutable](docs/adrs/ADR-001-build-artifacts-are-immutable.md) |
 | 3 | Continuous Deployment & artifact promotion | [Week 3 Lab](labs/week-3-lab.md) | [Deployment Success vs. Environment Readiness diagram](docs/diagrams/Deployment_Success_vs_Environment_Readiness.png) |
 | 4 | Architecture Communication and ADRs | [Week 4 Lab](labs/Week-4-Lab.md) | [ADR-002: Independent Readiness Validation](docs/adrs/ADR-002-independent-readiness-validation.md) <br/> [ADR-003: Delivery Evidence Storage](docs/adrs/ADR-003-delivery-evidence-storage.md) |
 | 5 | Observability with OpenTelemetry | [Week 5 Lab](labs/Week-5-Lab.md)| [Observability Contract](docs/contracts/observability-contract.md) |
+|6|Reliability Engineering and Failure Modes| [Week 6 Lab](labs/Week-6-Lab.md)| [FMEA](docs/reliability/fmea.md)<br/>[Realibility Improvements](docs/reliability/reliability-improvements.md)|
 
 ## Repository structure
 
 ```
+.github/       # Github CI pipeline configuration
+.vscode/       # Local launch configuration for this system
 diagraming/    # Tools for creating system diagrams using Structurizr
 docs/          # Week-by-week reasoning, ADRs, diagrams, proposals, reliability notes
   ├── adrs/             # Architecture Decision Records
-  ├── week-01/          # Delivery system map, workbook responses, retrospective
+  ├── contracts/        # Details of traces, logs, and metrics configuration 
+  ├── diagrams/         # C4 architectural diagrams of the application
+  ├── reliability/      # Analysis of failure modes and reliability improvement plans
+  ├── week-01/          # Delivery system map
   ├── week-02/          # Experiments, workbook responses, retrospective
   ├── week-03/          # Experiments, workbook responses, retrospective
   ├── week-04/          # Decisions, workbook responses, retrospective  
-  └── week-05/          # Expirements, observabiltiy contract, workbook responses, retrospective  
+  ├── week-05/          # Expirements, observabiltiy contract, workbook responses, retrospective  
+  └── week-06/          # Expirements, workbook responses, retrospective 
 labs/          # Step-by-step weekly instructions
-pipelines/     # CI/CD pipeline definitions
 scripts/       # build.ps1, record-readiness.ps1
 src/           # PolicyService — the ASP.NET Core Web API under study
 tests/         # PolicyService.Tests — unit tests
+tools/         # Auxiliary services for the application (including RiskScore and Email services), including configuration for the diagramaing tool Structurizr
 ```
 
 ## The Policy Service
@@ -43,6 +50,7 @@ tests/         # PolicyService.Tests — unit tests
 A minimal ASP.NET Core Web API that grows in complexity as the lab progresses. It exposes:
 
 - `GET /health` — service health check
+- `GET /readiness` — service readiness check
 - `GET /policies/{id}` — retrieve a policy
 - `POST /policies` — create a policy
 
