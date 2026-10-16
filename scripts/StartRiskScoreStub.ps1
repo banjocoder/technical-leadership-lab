@@ -1,0 +1,3 @@
+﻿# This is the script to start the Risk Score Stub with zero delay involved. If you want to add a delay to the RiskStub, change the RiskStub:DelayMs= to a millisecond variable. 
+dotnet run --project tools/RiskScoreStub --no-launch-profile -- --urls http://localhost:5099 --RiskStub:DelayMs=0
+dotnet run --project tools/RiskScoreStub --no-launch-profile -- --urls http://localhost:5099 --RiskStub:DelayMs=10000   
