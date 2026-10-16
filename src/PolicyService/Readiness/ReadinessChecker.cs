@@ -1,13 +1,15 @@
 using PolicyService.Models;
 using PolicyService.Services;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace PolicyService.Readiness;
 
 public sealed class ReadinessChecker(
     IConfiguration configuration,
     IHttpClientFactory httpClientFactory,
-    PolicyStore policyStore)
+    PolicyStore policyStore,
+    PolicyDatabase policyDatabase)
 {
     public async Task<IReadOnlyList<ReadinessCheck>> RunAsync()
     {
@@ -19,6 +21,7 @@ public sealed class ReadinessChecker(
         checks.Add(await CheckDatabaseAsync());
         checks.Add(RunPolicySmokeTest());
         checks.Add(await CheckExternalDependencyAsync());
+        checks.Add(await ValidateLineOfBusinessAsync());
 
         return checks;
     }
@@ -166,6 +169,39 @@ public sealed class ReadinessChecker(
                 CheckCategory.Dependency,
                 CheckResult.Fail,
                 $"Dependency unavailable: {ex.GetType().Name}: {ex.Message}");
+        }
+    }
+
+    public async Task<ReadinessCheck> ValidateLineOfBusinessAsync(
+        CancellationToken cancellationToken = default)
+    {
+
+        if (!configuration.GetValue<bool>("Readiness:RequireDatabase"))
+        {
+            return Skipped(
+                "database",
+                CheckCategory.Dependency,
+                "Database not required for this deployment scope");
+        }
+
+        try
+        {
+            await policyDatabase.ValidateLineOfBusinessAsync(
+                                cancellationToken);
+
+            return Blocking(
+                "database schema",
+                CheckCategory.Dependency,
+                CheckResult.Pass,
+                "Database is available and line of business is valid");
+        }
+        catch (Exception ex)
+        {
+            return Blocking(
+                "database schema",
+                CheckCategory.Dependency,
+                CheckResult.Fail,
+                $"Database connection failed: {ex.Message}");
         }
     }
 

@@ -1,5 +1,6 @@
 using Microsoft.Data.SqlClient;
 using System.Diagnostics;
+using System.Data;
 
 namespace PolicyService.Services;
 
@@ -28,5 +29,42 @@ public sealed class PolicyDatabase(IConfiguration configuration)
         };
         Activity.Current?.SetTag("database.operation.stage", "execute_query");
         await command.ExecuteScalarAsync(cancellationToken);
+    }
+
+
+    public async Task ValidateLineOfBusinessAsync(CancellationToken cancellationToken)
+    {
+        var connectionString = configuration.GetConnectionString("PolicyDatabase");
+
+        if (string.IsNullOrWhiteSpace(connectionString))
+        {
+            throw new InvalidOperationException(
+                "The policy database connection string is missing.");
+        }
+
+        const string sql = """
+            SELECT TOP (1) LOB
+            FROM dbo.LineOfBusiness
+            WHERE LOB = @lob;
+            """;
+
+        await using var connection = new SqlConnection(connectionString);
+        await connection.OpenAsync(cancellationToken);
+
+        await using var command = new SqlCommand(sql, connection)
+        {
+            CommandTimeout = 3
+        };
+
+        command.Parameters.Add("@lob", SqlDbType.VarChar, 100).Value = "Fire";
+
+        var result = await command.ExecuteScalarAsync(cancellationToken);
+
+        if (result is not string lob ||
+            !string.Equals(lob, "Fire", StringComparison.Ordinal))
+        {
+            throw new InvalidOperationException(
+                "The required line-of-business value 'Fire' is unavailable.");
+        }
     }
 }

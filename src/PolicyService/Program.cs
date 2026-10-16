@@ -53,6 +53,18 @@ builder.Services.AddOpenTelemetry()
         .AddMeter("PolicyService.Issuance")
         .AddConsoleExporter());
 
+builder.Services.AddHttpClient("RiskScore", client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5099");
+    client.Timeout = TimeSpan.FromSeconds(5);
+});
+
+builder.Services.AddHttpClient("EmailService", client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5098");
+    client.Timeout = TimeSpan.FromSeconds(5);
+});
+
 var app = builder.Build();
 
 app.MapHealthEndpoints();
