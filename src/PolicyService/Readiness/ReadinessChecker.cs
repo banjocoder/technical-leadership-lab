@@ -176,7 +176,7 @@ public sealed class ReadinessChecker(
         CancellationToken cancellationToken = default)
     {
 
-        if (!configuration.GetValue<bool>("Readiness:RequireDatabase"))
+        if (!configuration.GetValue<bool>("Readiness:RequireDatabaseSchema"))
         {
             return Skipped(
                 "database",
