@@ -12,6 +12,7 @@ $env:ASPNETCORE_URLS = "http://localhost:5006"
 $env:ConnectionStrings__PolicyDatabase = "Server=(localdb)\MSSQLLocalDB;Database=PolicyDb;Integrated Security=true;Connect Timeout=3"
 $env:EnvironmentSettings__DisplayName = 'DEV'
 $env:Readiness__RequireDatabase = "true"
+$env:Readiness__RequireDatabaseSchema     = "false"
 
 Set-Location $runtimePath
 dotnet run

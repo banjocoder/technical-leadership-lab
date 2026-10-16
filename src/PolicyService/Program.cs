@@ -1,3 +1,4 @@
+using PolicyService.Configuration;
 using PolicyService.Endpoints;
 using PolicyService.Readiness;
 using PolicyService.Services;
@@ -8,11 +9,21 @@ using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.Configure<ServiceEndpointsOptions>(
+    builder.Configuration.GetSection(ServiceEndpointsOptions.SectionName));
+builder.Services.Configure<PolicyRulesOptions>(
+    builder.Configuration.GetSection(PolicyRulesOptions.SectionName));
+
 builder.Services.AddSingleton<PolicyStore>();
 builder.Services.AddScoped<ReadinessChecker>();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<PolicyDatabase>();
+builder.Services.AddScoped<PolicyIssuanceService>();
 builder.Services.AddSingleton<IssuanceMetrics>();
+
+var serviceEndpoints = builder.Configuration
+    .GetSection(ServiceEndpointsOptions.SectionName)
+    .Get<ServiceEndpointsOptions>() ?? new ServiceEndpointsOptions();
 
 // Explicit local identifier for setup.
 // Later, deployed runs will supply the real artifact version.
@@ -55,13 +66,13 @@ builder.Services.AddOpenTelemetry()
 
 builder.Services.AddHttpClient("RiskScore", client =>
 {
-    client.BaseAddress = new Uri("http://localhost:5099");
+    client.BaseAddress = new Uri(serviceEndpoints.RiskScoreUrl);
     client.Timeout = TimeSpan.FromSeconds(5);
 });
 
 builder.Services.AddHttpClient("EmailService", client =>
 {
-    client.BaseAddress = new Uri("http://localhost:5098");
+    client.BaseAddress = new Uri(serviceEndpoints.EmailServiceUrl);
     client.Timeout = TimeSpan.FromSeconds(5);
 });
 

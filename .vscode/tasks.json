@@ -1,0 +1,100 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/src/PolicyService/PolicyService.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "run-riskscore-stub",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "run",
+                "--project",
+                "${workspaceFolder}/tools/RiskScoreStub",
+                "--no-launch-profile",
+                "--",
+                "--urls",
+                "http://localhost:5099",
+                "--RiskStub:DelayMs=0"
+            ],
+            "isBackground": true,
+            "problemMatcher": {
+                "pattern": {
+                    "regexp": "^.*$",
+                    "file": 1,
+                    "location": 2,
+                    "message": 3
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^.*Building\\.\\.\\.$|^.*Now listening on.*$",
+                    "endsPattern": "^.*Now listening on.*$|^.*Application started.*$"
+                }
+            }
+        },
+        {
+            "label": "run-email-stub",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "run",
+                "--project",
+                "${workspaceFolder}/tools/EmailServiceStub",
+                "--no-launch-profile",
+                "--",
+                "--urls",
+                "http://localhost:5098",
+                "--EmailService:Result=success"
+            ],
+            "isBackground": true,
+            "problemMatcher": {
+                "pattern": {
+                    "regexp": "^.*$",
+                    "file": 1,
+                    "location": 2,
+                    "message": 3
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^.*Building\\.\\.\\.$|^.*Now listening on.*$",
+                    "endsPattern": "^.*Now listening on.*$|^.*Application started.*$"
+                }
+            }
+        },
+        {
+            "label": "stop-policyservice-dependencies",
+            "type": "process",
+            "command": "powershell",
+            "args": [
+                "-NoProfile",
+                "-Command",
+                "Get-Process -Name RiskScoreStub,EmailServiceStub -ErrorAction SilentlyContinue | Stop-Process -Force"
+            ],
+            "presentation": {
+                "reveal": "silent",
+                "close": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "start-policyservice-dependencies",
+            "dependsOn": [
+                "build",
+                "run-riskscore-stub",
+                "run-email-stub"
+            ],
+            "dependsOrder": "parallel",
+            "problemMatcher": []
+        }
+    ]
+}

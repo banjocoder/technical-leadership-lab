@@ -1,7 +1,5 @@
 using PolicyService.Models;
 using PolicyService.Services;
-using Microsoft.Data.SqlClient;
-using System.Data;
 
 namespace PolicyService.Readiness;
 
@@ -51,21 +49,9 @@ public sealed class ReadinessChecker(
                 "Database not required for this deployment scope");
         }
 
-        var connectionString = configuration.GetConnectionString("PolicyDatabase");
-
-        if (string.IsNullOrWhiteSpace(connectionString))
-        {
-            return Blocking(
-                "database",
-                CheckCategory.Dependency,
-                CheckResult.Fail,
-                "ConnectionStrings:PolicyDatabase is not set");
-        }
-
         try
         {
-            await using var connection = new SqlConnection(connectionString);
-            await connection.OpenAsync();
+            await policyDatabase.VerifyConnectionAsync();
 
             return Blocking(
                 "database",

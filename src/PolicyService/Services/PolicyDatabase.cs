@@ -1,70 +1,79 @@
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using System.Data;
+using PolicyService.Configuration;
 
 namespace PolicyService.Services;
 
-public sealed class PolicyDatabase(IConfiguration configuration)
+public sealed class PolicyDatabase(
+    IConfiguration configuration,
+    IOptions<PolicyRulesOptions> policyRules)
 {
-    public async Task VerifyIssuanceDependencyAsync(CancellationToken cancellationToken)
-    {
-        var connectionString = configuration.GetConnectionString("PolicyDatabase");
+    private const string ConnectionStringName = "PolicyDatabase";
 
-        // Reject a missing/blank connection string.
+    private readonly PolicyRulesOptions _policyRules = policyRules.Value;
+
+    // Single owner of connection acquisition for every database operation.
+    private async Task<SqlConnection> OpenConnectionAsync(CancellationToken cancellationToken)
+    {
+        var connectionString = configuration.GetConnectionString(ConnectionStringName);
+
         if (string.IsNullOrWhiteSpace(connectionString))
         {
-            throw new InvalidOperationException("The connection string for the PolicyDatabase is missing or blank.");
+            throw new InvalidOperationException(
+                "The connection string for the PolicyDatabase is missing or blank.");
         }
-        
-        // Open a SqlConnection asynchronously.
-        await using var connection = new SqlConnection(connectionString);
-        Activity.Current?.SetTag("database.operation.stage", "open_connection");
+
+        var connection = new SqlConnection(connectionString);
         await connection.OpenAsync(cancellationToken);
-        
-        // Execute SELECT 1 asynchronously.
+        return connection;
+    }
+
+    public async Task VerifyConnectionAsync(CancellationToken cancellationToken = default)
+    {
+        await using var connection = await OpenConnectionAsync(cancellationToken);
+    }
+
+    public async Task VerifyIssuanceDependencyAsync(CancellationToken cancellationToken)
+    {
+        Activity.Current?.SetTag("database.operation.stage", "open_connection");
+        await using var connection = await OpenConnectionAsync(cancellationToken);
+
         await using var command = new SqlCommand("SELECT 1", connection)
         {
-            // Bound the command timeout and dispose resources.
-            CommandTimeout = 5 // Set an appropriate command timeout in seconds.
+            CommandTimeout = 5
         };
         Activity.Current?.SetTag("database.operation.stage", "execute_query");
         await command.ExecuteScalarAsync(cancellationToken);
     }
 
-
     public async Task ValidateLineOfBusinessAsync(CancellationToken cancellationToken)
     {
-        var connectionString = configuration.GetConnectionString("PolicyDatabase");
-
-        if (string.IsNullOrWhiteSpace(connectionString))
-        {
-            throw new InvalidOperationException(
-                "The policy database connection string is missing.");
-        }
-
         const string sql = """
             SELECT TOP (1) LOB
             FROM dbo.LineOfBusiness
             WHERE LOB = @lob;
             """;
 
-        await using var connection = new SqlConnection(connectionString);
-        await connection.OpenAsync(cancellationToken);
+        var requiredLob = _policyRules.RequiredLineOfBusiness;
+
+        await using var connection = await OpenConnectionAsync(cancellationToken);
 
         await using var command = new SqlCommand(sql, connection)
         {
             CommandTimeout = 3
         };
 
-        command.Parameters.Add("@lob", SqlDbType.VarChar, 100).Value = "Fire";
+        command.Parameters.Add("@lob", SqlDbType.VarChar, 100).Value = requiredLob;
 
         var result = await command.ExecuteScalarAsync(cancellationToken);
 
         if (result is not string lob ||
-            !string.Equals(lob, "Fire", StringComparison.Ordinal))
+            !string.Equals(lob, requiredLob, StringComparison.Ordinal))
         {
             throw new InvalidOperationException(
-                "The required line-of-business value 'Fire' is unavailable.");
+                $"The required line-of-business value '{requiredLob}' is unavailable.");
         }
     }
 }
