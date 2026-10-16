@@ -6,9 +6,24 @@
     "configurations": [
         {
             "name": "C#: PolicyService Debug",
-            "type": "dotnet",
+            "type": "coreclr",
             "request": "launch",
-            "projectPath": "${workspaceFolder}/src/PolicyService/PolicyService.csproj"
+            "preLaunchTask": "start-policyservice-dependencies",
+            "postDebugTask": "stop-policyservice-dependencies",
+            "program": "${workspaceFolder}/src/PolicyService/bin/Debug/net9.0/win-x64/PolicyService.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/src/PolicyService",
+            "stopAtEntry": false,
+            "env": {
+                "Deployment__Version": "1.0.0",
+                "Deployment__SourceRevision": "1",
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "http://localhost:5006",
+                "ConnectionStrings__PolicyDatabase": "Server=(localdb)\\MSSQLLocalDB;Database=PolicyDb;Integrated Security=true;Connect Timeout=3",
+                "EnvironmentSettings__DisplayName": "DEV",
+                "Readiness__RequireDatabase": "true",
+                "Readiness__RequireDatabaseSchema": "false"
+            }
         }
 
     ]

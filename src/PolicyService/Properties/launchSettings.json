@@ -1,6 +1,21 @@
 ﻿{
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "profiles": {
+    "DEV": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "applicationUrl": "http://localhost:5006",
+      "environmentVariables": {
+        "Deployment__Version": "1.0.0",
+        "Deployment__SourceRevision": "1",
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "EnvironmentSettings__DisplayName": "DEV",
+        "ConnectionStrings__PolicyDatabase": "Server=(localdb)\\MSSQLLocalDB;Database=PolicyDb;Integrated Security=true;Connect Timeout=3",
+        "Readiness__RequireDatabase": "true",
+        "Readiness__RequireDatabaseSchema": "false"
+      }
+    },
     "http": {
       "commandName": "Project",
       "dotnetRunMessages": true,
