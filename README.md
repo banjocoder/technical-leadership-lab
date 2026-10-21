@@ -20,6 +20,10 @@ The lab is built around a fictional **Policy Service** (an ASP.NET Core Web API)
 | 4 | Architecture Communication and ADRs | [Week 4 Lab](labs/Week-4-Lab.md) | [ADR-002: Independent Readiness Validation](docs/adrs/ADR-002-independent-readiness-validation.md) <br/> [ADR-003: Delivery Evidence Storage](docs/adrs/ADR-003-delivery-evidence-storage.md) |
 | 5 | Observability with OpenTelemetry | [Week 5 Lab](labs/Week-5-Lab.md)| [Observability Contract](docs/contracts/observability-contract.md) |
 |6|Reliability Engineering and Failure Modes| [Week 6 Lab](labs/Week-6-Lab.md)| [FMEA](docs/reliability/fmea.md)<br/>[Realibility Improvements](docs/reliability/reliability-improvements.md)|
+|7|Site Reliability Engineering: SLI, SLO, Error Budgets, and Toil| [Week 7 Lab](labs/Week-7-Lab.md)||
+|8|Environment Certification Service| [Week 8 Lab](labs/Week-8-Lab.md)||
+|9|Architecture Proposal and Decision Enablement| [Week 9 Lab](labs/Week-9-Lab.md)||
+|10|Technical Leadership Simulation| [Week 10 Lab](labs/Week-10-Lab.md)||
 
 ## Repository structure
 
@@ -37,7 +41,11 @@ docs/          # Week-by-week reasoning, ADRs, diagrams, proposals, reliability 
   ├── week-03/          # Experiments, workbook responses, retrospective
   ├── week-04/          # Decisions, workbook responses, retrospective  
   ├── week-05/          # Expirements, observabiltiy contract, workbook responses, retrospective  
-  └── week-06/          # Expirements, workbook responses, retrospective 
+  ├── week-06/          # Expirements, workbook responses, retrospective
+  ├── week-07/          # Reliability Scorecard, toil reduction backlog, workbook responses, retrospective
+  ├── week-08/          # Working Certification prototype, new ADR, workbook responses, retrospective
+  ├── week-09/          # Architectural Proposal (with executive one-pager), decision pitch, workbook responses, retrospective
+  └── week-10/          # Capstone Architectural Review deck, completed final assessment, workbook responses, retrospective
 labs/          # Step-by-step weekly instructions
 scripts/       # build.ps1, record-readiness.ps1
 src/           # PolicyService — the ASP.NET Core Web API under study
