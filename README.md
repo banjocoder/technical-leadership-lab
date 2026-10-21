@@ -40,8 +40,8 @@ docs/          # Week-by-week reasoning, ADRs, diagrams, proposals, reliability 
   ├── week-02/          # Experiments, workbook responses, retrospective
   ├── week-03/          # Experiments, workbook responses, retrospective
   ├── week-04/          # Decisions, workbook responses, retrospective  
-  ├── week-05/          # Expirements, observabiltiy contract, workbook responses, retrospective  
-  ├── week-06/          # Expirements, workbook responses, retrospective
+  ├── week-05/          # Experiments, observability contract, workbook responses, retrospective  
+  ├── week-06/          # Experiments, workbook responses, retrospective
   ├── week-07/          # Reliability Scorecard, toil reduction backlog, workbook responses, retrospective
   ├── week-08/          # Working Certification prototype, new ADR, workbook responses, retrospective
   ├── week-09/          # Architectural Proposal (with executive one-pager), decision pitch, workbook responses, retrospective
