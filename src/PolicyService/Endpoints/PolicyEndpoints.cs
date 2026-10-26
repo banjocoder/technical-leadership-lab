@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using PolicyService.Models;
 using PolicyService.Services;
 
@@ -9,9 +10,10 @@ public static class PolicyEndpoints
     {
         app.MapGet(
             "/policies/{id:int}",
-            (int id, PolicyStore store) =>
+            async (int id, IPolicyRepository repository,
+            CancellationToken cancellationToken) =>
             {
-                var policy = store.GetPolicy(id);
+                var policy = await repository.GetPolicyAsync(id, cancellationToken);
 
                 return policy is null
                     ? Results.NotFound()
@@ -21,11 +23,28 @@ public static class PolicyEndpoints
         app.MapPost(
             "/policies",
             async (
-                CreatePolicyRequest request,
+                CreatePolicyBody body,
+                [FromHeader(Name = "Idempotency-Key")] Guid? idempotencyKey,
                 PolicyIssuanceService issuanceService,
                 CancellationToken cancellationToken) =>
             {
-                var outcome = await issuanceService.IssueAsync(request, cancellationToken);
+                if (idempotencyKey is null || idempotencyKey == Guid.Empty)
+                {   
+                    return Results.ValidationProblem(
+                        new Dictionary<string, string[]>
+                        {
+                            ["Idempotency-Key"] =
+                                new[] { "A non-empty GUID header is required." }
+                        });
+                }
+
+                var request = new CreatePolicyRequest(
+                    body.PolicyHolderName,
+                    body.LineOfBusiness,
+                    idempotencyKey.Value,
+                    body.EffectiveDate);
+
+                var outcome = await issuanceService.BeginPolicyIssuanceProcedureAsync(request, cancellationToken);
 
                 return outcome.Status switch
                 {

@@ -19,7 +19,7 @@ public class PolicyServiceTests
 
         Assert.AreEqual(1, policy.Id);
         Assert.AreEqual("Jane Doe", policy.PolicyHolderName);
-        Assert.AreEqual("Homeowners", policy.PolicyType);
+        Assert.AreEqual("Homeowners", policy.LineOfBusiness);
     }
 
     [TestMethod]

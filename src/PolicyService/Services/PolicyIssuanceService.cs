@@ -19,13 +19,13 @@ public sealed record IssuanceOutcome(
     IDictionary<string, string[]>? ValidationErrors = null);
 
 public sealed class PolicyIssuanceService(
-    PolicyStore store,
+    IPolicyRepository repository,
     PolicyDatabase database,
     IHttpClientFactory httpClientFactory,
     IssuanceMetrics metrics,
     ILogger<PolicyIssuanceService> logger)
 {
-    public async Task<IssuanceOutcome> IssueAsync(
+    public async Task<IssuanceOutcome> BeginPolicyIssuanceProcedureAsync(
         CreatePolicyRequest request,
         CancellationToken cancellationToken)
     {
@@ -62,11 +62,14 @@ public sealed class PolicyIssuanceService(
                 return riskScoreError;
             }
 
-            var policy = IssuePolicy(request, issuance);
+            var response = await IssuePolicy(request, issuance, cancellationToken);
 
-            await SendMarketingEmailAsync(request, policy, cancellationToken);
+            if (response.IsNew)
+            {
+                await SendMarketingEmailAsync(request, response.Policy, cancellationToken);
+            }
 
-            return new IssuanceOutcome(IssuanceStatus.Created, Policy: policy);
+            return new IssuanceOutcome(IssuanceStatus.Created, Policy: response.Policy);
         }
         catch (OperationCanceledException)
             when (cancellationToken.IsCancellationRequested)
@@ -104,7 +107,7 @@ public sealed class PolicyIssuanceService(
             IssuanceTracing.Source.StartActivity("policy.validate");
 
         if (string.IsNullOrWhiteSpace(request.PolicyHolderName)
-            || string.IsNullOrWhiteSpace(request.PolicyType))
+            || string.IsNullOrWhiteSpace(request.LineOfBusiness))
         {
             validation?.SetTag("validation.outcome", "rejected");
             issuance?.SetTag("issuance.outcome", "validation_rejected");
@@ -115,7 +118,7 @@ public sealed class PolicyIssuanceService(
                 IssuanceStatus.ValidationRejected,
                 ValidationErrors: new Dictionary<string, string[]>
                 {
-                    ["request"] = ["PolicyHolderName and PolicyType are required."]
+                    ["request"] = ["PolicyHolderName and LineOfBusiness are required."]
                 });
         }
 
@@ -213,14 +216,14 @@ public sealed class PolicyIssuanceService(
         return null;
     }
 
-    private Policy IssuePolicy(CreatePolicyRequest request, Activity? issuance)
+    private async Task<CreatePolicyResponse> IssuePolicy(CreatePolicyRequest request, Activity? issuance, CancellationToken cancellationToken)
     {
-        Policy policy;
+        CreatePolicyResponse response;
 
         using (var creation =
             IssuanceTracing.Source.StartActivity("policy.create"))
         {
-            policy = store.CreatePolicy(request);
+            response = await repository.CreatePolicyAsync(request, cancellationToken);
         }
 
         metrics.Successes.Add(1);
@@ -229,9 +232,9 @@ public sealed class PolicyIssuanceService(
         logger.LogInformation(
             new EventId(5101, "PolicyIssuanceSucceeded"),
             "Policy issuance succeeded with policy {PolicyId}",
-            policy.Id);
+            response.Policy.Id);
 
-        return policy;
+        return response;
     }
 
     private async Task SendMarketingEmailAsync(

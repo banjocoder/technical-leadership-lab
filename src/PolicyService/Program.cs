@@ -17,9 +17,10 @@ builder.Services.Configure<PolicyRulesOptions>(
 builder.Services.AddSingleton<PolicyStore>();
 builder.Services.AddScoped<ReadinessChecker>();
 builder.Services.AddHttpClient();
-builder.Services.AddScoped<PolicyDatabase>();
+builder.Services.AddSingleton<PolicyDatabase>();
 builder.Services.AddScoped<PolicyIssuanceService>();
 builder.Services.AddSingleton<IssuanceMetrics>();
+builder.Services.AddSingleton<IPolicyRepository>(services => services.GetRequiredService<PolicyDatabase>());
 
 var serviceEndpoints = builder.Configuration
     .GetSection(ServiceEndpointsOptions.SectionName)

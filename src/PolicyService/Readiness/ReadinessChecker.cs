@@ -82,7 +82,11 @@ public sealed class ReadinessChecker(
         try
         {
             var created = policyStore.CreatePolicy(
-                new CreatePolicyRequest("readiness-probe", "smoke-test"));
+                new CreatePolicyRequest(
+                    "readiness-probe",
+                    "smoke-test",
+                    Guid.NewGuid(),
+                    DateOnly.FromDateTime(DateTime.UtcNow)));
             var fetched = policyStore.GetPolicy(created.Id);
 
             return Blocking(

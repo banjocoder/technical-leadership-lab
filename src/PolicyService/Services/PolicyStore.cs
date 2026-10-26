@@ -12,11 +12,18 @@ public class PolicyStore
     {
         var nextId = Interlocked.Increment(ref _lastId);
 
+        var expirationDate = request.EffectiveDate.AddYears(1).AddDays(-1);
+        var policyNumber = $"POL-{nextId:D6}";
+
         var policy = new Policy(
             nextId,
             request.PolicyHolderName,
-            request.PolicyType,
-            DateTimeOffset.UtcNow);
+            request.LineOfBusiness,
+            DateTimeOffset.UtcNow,
+            policyNumber,
+            1,
+            request.EffectiveDate,
+            expirationDate);
 
         _policies[nextId] = policy;
 

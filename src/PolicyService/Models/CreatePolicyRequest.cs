@@ -2,4 +2,6 @@ namespace PolicyService.Models;
 
 public record CreatePolicyRequest(
     string PolicyHolderName,
-    string PolicyType);
+    string LineOfBusiness,
+    Guid RequestId,
+    DateOnly EffectiveDate);
