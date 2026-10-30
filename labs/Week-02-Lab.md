@@ -651,7 +651,7 @@ Repository
     ├── asks for package X
     │
     ▼
-NuGet configuration on Ben's machine
+NuGet configuration on local's machine
     │
     ├── nuget.org
     └── local Microsoft package directory
