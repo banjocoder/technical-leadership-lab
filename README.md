@@ -20,7 +20,7 @@ The lab is built around a fictional **Policy Service** (an ASP.NET Core Web API)
 | 4 | Architecture Communication and ADRs | [Week 4 Lab](labs/Week-4-Lab.md) | [ADR-002: Independent Readiness Validation](docs/adrs/ADR-002-independent-readiness-validation.md) <br/> [ADR-003: Delivery Evidence Storage](docs/adrs/ADR-003-delivery-evidence-storage.md) |
 | 5 | Observability with OpenTelemetry | [Week 5 Lab](labs/Week-5-Lab.md)| [Observability Contract](docs/contracts/observability-contract.md) |
 |6|Reliability Engineering and Failure Modes| [Week 6 Lab](labs/Week-6-Lab.md)| [FMEA](docs/reliability/fmea.md)<br/>[Realibility Improvements](docs/reliability/reliability-improvements.md)|
-|7|Site Reliability Engineering: SLI, SLO, Error Budgets, and Toil| [Week 7 Lab](labs/Week-7-Lab.md)||
+|7|Site Reliability Engineering: SLI, SLO, Error Budgets, and Toil| [Week 7 Lab](labs/Week-7-Lab.md)|[Reliability Scorecard](/docs/week-07/reliability-scorecard.md)<br/>[SLI Definitions](/docs/week-07/sli-definitions.md)<br/>[Toil Reduction Backlog](/docs/week-07/toil-reduction-backlog.md)|
 |8|Environment Certification Service| [Week 8 Lab](labs/Week-8-Lab.md)||
 |9|Architecture Proposal and Decision Enablement| [Week 9 Lab](labs/Week-9-Lab.md)||
 |10|Technical Leadership Simulation| [Week 10 Lab](labs/Week-10-Lab.md)||

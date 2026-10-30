@@ -3,7 +3,7 @@
 **Draft as of:** 2026-10-29 | **Environment:** Local lab; actual QA not measured  
 **Artifact / commit:** [record version and commit] | **Run:** [UTC start/end]  
 **Owner:** Lab maintainer | **Next review:** After evidence reconciliation  
-**Definitions:** [SLI definitions](sli-definitions.md) | **Evidence:** [Experiment record](experiments.md)
+**Definitions:** [SLI definitions](/docs/week-07/sli-definitions.md) | **Evidence:** [Experiment record](/docs/week-07/experiments.md)
 
 | SLI / measurement | Target | Window / failure rule | Data source | Observed / assessment |
 |---|---|---|---|---|

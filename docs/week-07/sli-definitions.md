@@ -3,7 +3,7 @@
 **Status:** Draft for review  
 **As of:** 2026-10-29  
 **Scope:** PolicyService issuance and retrieval, SQL Server persistence, and proposed QA deployment validation  
-**Related:** [Reliability scorecard](reliability-scorecard.md), [experiment record](experiments.md)
+**Related:** [Reliability scorecard](/docs/week-07/reliability-scorecard.md), [experiment record](/docs/week-07/experiments.md)
 
 ## Scope and Evidence Status
 
