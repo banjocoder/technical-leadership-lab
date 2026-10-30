@@ -1,4 +1,4 @@
-﻿$runtimePath = "C:\Users\stith_b\source\repos\technical-leadership-lab\src\PolicyService"
+﻿$runtimePath = "****\technical-leadership-lab\src\PolicyService"
 
 if ([string]::IsNullOrWhiteSpace($manifest.version) -or
     [string]::IsNullOrWhiteSpace($manifest.sourceRevision)) {
