@@ -1,9 +1,13 @@
 # PolicyService Reliability Scorecard
 
-**Draft as of:** 2026-10-29 | **Environment:** Local lab; actual QA not measured  
-**Artifact / commit:** [record version and commit] | **Run:** [UTC start/end]  
-**Owner:** Lab maintainer | **Next review:** After evidence reconciliation  
-**Definitions:** [SLI definitions](/docs/week-07/sli-definitions.md) | **Evidence:** [Experiment record](/docs/week-07/experiments.md)
+**Draft as of:** 2026-10-29 <br/>
+**Environment:** Local lab; actual QA not measured <br/>
+**Artifact / commit:** 0.2.0 <br/>
+**Run:** 2026-10-29 <br/>
+**Owner:** Lab maintainer <br/>
+**Next review:** After evidence reconciliation <br/>
+**Definitions:** [SLI definitions](/docs/week-07/sli-definitions.md) <br/>
+**Evidence:** [Experiment record](/docs/week-07/experiments.md)
 
 | SLI / measurement | Target | Window / failure rule | Data source | Observed / assessment |
 |---|---|---|---|---|
@@ -23,6 +27,4 @@ Below 95% QA deployment success: notify QA, Development, Operations, and the nex
 Reconcile the fresh Postman evidence, calculate service ratios, and retain fault/recovery and restart records. Alert the internal team when newly issued policy retrieval remains unverified after one minute (proposed response, not confirmed implemented). Toil candidate: **not yet selected**.
 
 A successful local restart test supports application-process survival, not database-disaster durability. Small synthetic samples do not establish 30-day reliability. Identity checks cover PolicyID, TermNumber, and PolicyHolderName; they do not establish full business correctness.
-
-*Draft placeholders and relative evidence links must be completed before portfolio closeout.*
 

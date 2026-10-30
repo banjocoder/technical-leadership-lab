@@ -3923,9 +3923,9 @@ The workbook's suggested end-of-Week-3 review is whether you can explain **artif
 
 * * *
 
-## Week 3 Expirements doc: 
+## Week 3 Experiments doc: 
 
-Your week 3 expirements doc (expirements.md) should look something like this: 
+Your week 3 experiments doc (experiments.md) should look something like this: 
 
 ````
 # Week 3 Experiments: Continuous Deployment and Artifact Promotion

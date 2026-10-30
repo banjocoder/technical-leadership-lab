@@ -1,4 +1,4 @@
-# SLO Expirements
+# SLO Experiments
 
 |Measurement|	Counts needed|
 |--|--|
