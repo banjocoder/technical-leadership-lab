@@ -1,0 +1,864 @@
+{
+  "configuration" : { },
+  "description" : "Description",
+  "documentation" : { },
+  "id" : 1,
+  "lastModifiedAgent" : "structurizr/diagrams/671f1490-582f-4f8e-9244-94ae015e2fb6",
+  "lastModifiedDate" : "2026-10-02T14:07:37Z",
+  "lastModifiedUser" : "1823412273",
+  "model" : {
+    "customElements" : [ {
+      "id" : "4",
+      "name" : "Package Repository",
+      "properties" : {
+        "structurizr.dsl.identifier" : "packageRepository"
+      },
+      "relationships" : [ {
+        "description" : "Provides dependency packages",
+        "destinationId" : "9",
+        "id" : "23",
+        "sourceId" : "4",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Provides dependency packages",
+        "destinationId" : "8",
+        "id" : "24",
+        "linkedRelationshipId" : "23",
+        "sourceId" : "4"
+      } ],
+      "tags" : "Element"
+    }, {
+      "id" : "5",
+      "name" : "Cloudflare R2",
+      "properties" : {
+        "structurizr.dsl.identifier" : "cloudflare"
+      },
+      "tags" : "Element,DataStore"
+    }, {
+      "id" : "6",
+      "name" : "Dev Environment",
+      "properties" : {
+        "structurizr.dsl.identifier" : "devEnv"
+      },
+      "tags" : "Element"
+    }, {
+      "id" : "7",
+      "name" : "QA Environment",
+      "properties" : {
+        "structurizr.dsl.identifier" : "qaEnv"
+      },
+      "tags" : "Element"
+    } ],
+    "deploymentNodes" : [ {
+      "children" : [ {
+        "containerInstances" : [ {
+          "containerId" : "9",
+          "environment" : "Pipeline Execution",
+          "id" : "52",
+          "instanceId" : 1,
+          "properties" : {
+            "structurizr.dsl.identifier" : "buildInstance"
+          },
+          "relationships" : [ {
+            "description" : "Publishes immutable artifact",
+            "destinationId" : "49",
+            "id" : "69",
+            "sourceId" : "52",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Container Instance"
+        } ],
+        "description" : "Ephemeral GitHub-hosted Windows runner",
+        "environment" : "Pipeline Execution",
+        "id" : "51",
+        "instances" : "1",
+        "name" : "Build Runner",
+        "properties" : {
+          "structurizr.dsl.identifier" : "buildRunner"
+        },
+        "tags" : "Element,Deployment Node",
+        "technology" : "windows-latest"
+      }, {
+        "containerInstances" : [ {
+          "containerId" : "11",
+          "environment" : "Pipeline Execution",
+          "id" : "54",
+          "instanceId" : 1,
+          "properties" : {
+            "structurizr.dsl.identifier" : "devDeployInstance"
+          },
+          "relationships" : [ {
+            "description" : "Deploys and starts",
+            "destinationId" : "56",
+            "id" : "57",
+            "linkedRelationshipId" : "36",
+            "sourceId" : "54"
+          } ],
+          "tags" : "Container Instance"
+        }, {
+          "containerId" : "13",
+          "environment" : "Pipeline Execution",
+          "id" : "55",
+          "instanceId" : 1,
+          "properties" : {
+            "structurizr.dsl.identifier" : "devReadinessInstance"
+          },
+          "relationships" : [ {
+            "description" : "Evaluates health and readiness",
+            "destinationId" : "56",
+            "id" : "58",
+            "linkedRelationshipId" : "38",
+            "sourceId" : "55"
+          }, {
+            "description" : "Makes build eligible for QA approval",
+            "destinationId" : "50",
+            "id" : "71",
+            "sourceId" : "55",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Container Instance"
+        }, {
+          "containerId" : "16",
+          "environment" : "Pipeline Execution",
+          "id" : "56",
+          "instanceId" : 1,
+          "properties" : {
+            "structurizr.dsl.identifier" : "devPolicyServiceInstance"
+          },
+          "relationships" : [ {
+            "description" : "Uses",
+            "destinationId" : "59",
+            "id" : "60",
+            "linkedRelationshipId" : "40",
+            "sourceId" : "56"
+          } ],
+          "tags" : "Container Instance"
+        }, {
+          "containerId" : "17",
+          "environment" : "Pipeline Execution",
+          "id" : "59",
+          "instanceId" : 1,
+          "properties" : {
+            "structurizr.dsl.identifier" : "devDatabaseInstance"
+          },
+          "tags" : "Container Instance"
+        } ],
+        "deploymentGroups" : [ "DEV" ],
+        "description" : "Ephemeral GitHub-hosted Windows runner",
+        "environment" : "Pipeline Execution",
+        "id" : "53",
+        "instances" : "1",
+        "name" : "DEV Runner",
+        "properties" : {
+          "structurizr.dsl.identifier" : "devRunner"
+        },
+        "tags" : "Element,Deployment Node",
+        "technology" : "windows-latest"
+      }, {
+        "containerInstances" : [ {
+          "containerId" : "12",
+          "environment" : "Pipeline Execution",
+          "id" : "62",
+          "instanceId" : 1,
+          "properties" : {
+            "structurizr.dsl.identifier" : "qaDeployInstance"
+          },
+          "relationships" : [ {
+            "description" : "Deploys and starts",
+            "destinationId" : "64",
+            "id" : "65",
+            "linkedRelationshipId" : "37",
+            "sourceId" : "62"
+          } ],
+          "tags" : "Container Instance"
+        }, {
+          "containerId" : "14",
+          "environment" : "Pipeline Execution",
+          "id" : "63",
+          "instanceId" : 1,
+          "properties" : {
+            "structurizr.dsl.identifier" : "qaReadinessInstance"
+          },
+          "relationships" : [ {
+            "description" : "Evaluates health and readiness",
+            "destinationId" : "64",
+            "id" : "66",
+            "linkedRelationshipId" : "39",
+            "sourceId" : "63"
+          } ],
+          "tags" : "Container Instance"
+        }, {
+          "containerId" : "16",
+          "environment" : "Pipeline Execution",
+          "id" : "64",
+          "instanceId" : 1,
+          "properties" : {
+            "structurizr.dsl.identifier" : "qaPolicyServiceInstance"
+          },
+          "relationships" : [ {
+            "description" : "Uses",
+            "destinationId" : "67",
+            "id" : "68",
+            "linkedRelationshipId" : "40",
+            "sourceId" : "64"
+          } ],
+          "tags" : "Container Instance"
+        }, {
+          "containerId" : "17",
+          "environment" : "Pipeline Execution",
+          "id" : "67",
+          "instanceId" : 1,
+          "properties" : {
+            "structurizr.dsl.identifier" : "qaDatabaseInstance"
+          },
+          "tags" : "Container Instance"
+        } ],
+        "deploymentGroups" : [ "QA" ],
+        "description" : "Ephemeral GitHub-hosted Windows runner",
+        "environment" : "Pipeline Execution",
+        "id" : "61",
+        "instances" : "1",
+        "name" : "QA Runner",
+        "properties" : {
+          "structurizr.dsl.identifier" : "qaRunner"
+        },
+        "tags" : "Element,Deployment Node",
+        "technology" : "windows-latest"
+      } ],
+      "description" : "Hosted CI/CD execution infrastructure",
+      "environment" : "Pipeline Execution",
+      "id" : "48",
+      "infrastructureNodes" : [ {
+        "description" : "Stores the immutable PolicyService build artifact",
+        "environment" : "Pipeline Execution",
+        "id" : "49",
+        "name" : "Workflow Artifact Storage",
+        "properties" : {
+          "structurizr.dsl.identifier" : "artifactStorage"
+        },
+        "relationships" : [ {
+          "description" : "Supplies immutable artifact",
+          "destinationId" : "54",
+          "id" : "70",
+          "sourceId" : "49",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Supplies same immutable artifact",
+          "destinationId" : "62",
+          "id" : "73",
+          "sourceId" : "49",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Infrastructure Node",
+        "technology" : "GitHub Actions Artifacts"
+      }, {
+        "description" : "Requires approval before the QA deployment job executes",
+        "environment" : "Pipeline Execution",
+        "id" : "50",
+        "name" : "QA Environment Approval",
+        "properties" : {
+          "structurizr.dsl.identifier" : "qaApprovalGate"
+        },
+        "relationships" : [ {
+          "description" : "Releases QA deployment after approval",
+          "destinationId" : "62",
+          "id" : "72",
+          "sourceId" : "50",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Infrastructure Node",
+        "technology" : "GitHub Environment"
+      } ],
+      "instances" : "1",
+      "name" : "GitHub Actions",
+      "properties" : {
+        "structurizr.dsl.identifier" : "githubPlatform"
+      },
+      "tags" : "Element,Deployment Node",
+      "technology" : "GitHub Actions"
+    } ],
+    "people" : [ {
+      "id" : "1",
+      "name" : "Contributor",
+      "properties" : {
+        "structurizr.dsl.identifier" : "contributor"
+      },
+      "relationships" : [ {
+        "description" : "Submits and reviews repository changes",
+        "destinationId" : "3",
+        "id" : "18",
+        "sourceId" : "1",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,Person"
+    }, {
+      "id" : "2",
+      "name" : "QA Environment Approver",
+      "properties" : {
+        "structurizr.dsl.identifier" : "qaApprover"
+      },
+      "relationships" : [ {
+        "description" : "Approves QA deployment",
+        "destinationId" : "12",
+        "id" : "21",
+        "sourceId" : "2",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Approves QA deployment",
+        "destinationId" : "8",
+        "id" : "22",
+        "linkedRelationshipId" : "21",
+        "sourceId" : "2"
+      } ],
+      "tags" : "Element,Person"
+    } ],
+    "softwareSystems" : [ {
+      "documentation" : { },
+      "id" : "3",
+      "name" : "GitHub",
+      "properties" : {
+        "structurizr.dsl.identifier" : "gitHub"
+      },
+      "relationships" : [ {
+        "description" : "Triggers build process",
+        "destinationId" : "9",
+        "id" : "19",
+        "sourceId" : "3",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Triggers build process",
+        "destinationId" : "8",
+        "id" : "20",
+        "linkedRelationshipId" : "19",
+        "sourceId" : "3"
+      } ],
+      "tags" : "Element,Software System"
+    }, {
+      "containers" : [ {
+        "documentation" : { },
+        "id" : "9",
+        "name" : "Build Process",
+        "properties" : {
+          "structurizr.dsl.identifier" : "buildProcess"
+        },
+        "relationships" : [ {
+          "description" : "Successful build triggers DEV deployment",
+          "destinationId" : "11",
+          "id" : "25",
+          "sourceId" : "9",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Produces immutable artifact",
+          "destinationId" : "10",
+          "id" : "26",
+          "sourceId" : "9",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Records artifact identity",
+          "destinationId" : "15",
+          "id" : "41",
+          "sourceId" : "9",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container"
+      }, {
+        "description" : "Packaged Application",
+        "documentation" : { },
+        "id" : "10",
+        "name" : "Build Artifact",
+        "properties" : {
+          "structurizr.dsl.identifier" : "buildArtifact"
+        },
+        "tags" : "Element,Container,Artifact",
+        "technology" : "ZIP file"
+      }, {
+        "documentation" : { },
+        "id" : "11",
+        "name" : "Dev Deployment Process",
+        "properties" : {
+          "structurizr.dsl.identifier" : "devDeploymentProcess"
+        },
+        "relationships" : [ {
+          "description" : "Retrieves/consumes immutable artifact",
+          "destinationId" : "10",
+          "id" : "27",
+          "sourceId" : "11",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Deploys artifact to",
+          "destinationId" : "6",
+          "id" : "28",
+          "sourceId" : "11",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Prompts QA deployment approval",
+          "destinationId" : "12",
+          "id" : "30",
+          "sourceId" : "11",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Deploys and starts",
+          "destinationId" : "16",
+          "id" : "36",
+          "sourceId" : "11",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Records DEV deployment result",
+          "destinationId" : "15",
+          "id" : "42",
+          "sourceId" : "11",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container"
+      }, {
+        "documentation" : { },
+        "id" : "12",
+        "name" : "QA Deployment Process",
+        "properties" : {
+          "structurizr.dsl.identifier" : "qaDeploymentProcess"
+        },
+        "relationships" : [ {
+          "description" : "Retrieves/consumes immutable artifact",
+          "destinationId" : "10",
+          "id" : "31",
+          "sourceId" : "12",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Deploys artifact to",
+          "destinationId" : "7",
+          "id" : "32",
+          "sourceId" : "12",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Deploys and starts",
+          "destinationId" : "16",
+          "id" : "37",
+          "sourceId" : "12",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Records QA deployment result",
+          "destinationId" : "15",
+          "id" : "44",
+          "sourceId" : "12",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container"
+      }, {
+        "documentation" : { },
+        "id" : "13",
+        "name" : "Dev Deployment Readiness Validation",
+        "properties" : {
+          "structurizr.dsl.identifier" : "devReadinessProcess"
+        },
+        "relationships" : [ {
+          "description" : "Evaluates",
+          "destinationId" : "6",
+          "id" : "34",
+          "sourceId" : "13",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Evaluates health and readiness",
+          "destinationId" : "16",
+          "id" : "38",
+          "sourceId" : "13",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Records DEV readiness evidence",
+          "destinationId" : "15",
+          "id" : "43",
+          "sourceId" : "13",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container"
+      }, {
+        "documentation" : { },
+        "id" : "14",
+        "name" : "QA Deployment Readiness Validation",
+        "properties" : {
+          "structurizr.dsl.identifier" : "qaReadinessProcess"
+        },
+        "relationships" : [ {
+          "description" : "Evaluates",
+          "destinationId" : "7",
+          "id" : "35",
+          "sourceId" : "14",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Evaluates health and readiness",
+          "destinationId" : "16",
+          "id" : "39",
+          "sourceId" : "14",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Records QA readiness evidence",
+          "destinationId" : "15",
+          "id" : "45",
+          "sourceId" : "14",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container"
+      }, {
+        "documentation" : { },
+        "id" : "15",
+        "name" : "Delivery Evidence",
+        "properties" : {
+          "structurizr.dsl.identifier" : "deliveryEvidenceStore"
+        },
+        "relationships" : [ {
+          "description" : "Persists data to",
+          "destinationId" : "5",
+          "id" : "46",
+          "sourceId" : "15",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container,DeliveryEvidence"
+      }, {
+        "description" : "Running PolicyService application",
+        "documentation" : { },
+        "id" : "16",
+        "name" : "PolicyService",
+        "properties" : {
+          "structurizr.dsl.identifier" : "policyServiceRuntime"
+        },
+        "relationships" : [ {
+          "description" : "Uses",
+          "destinationId" : "17",
+          "id" : "40",
+          "sourceId" : "16",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container,DeploymentOnly",
+        "technology" : "ASP.NET Core"
+      }, {
+        "description" : "Ephemeral database used by the deployed PolicyService",
+        "documentation" : { },
+        "id" : "17",
+        "name" : "Policy Database",
+        "properties" : {
+          "structurizr.dsl.identifier" : "policyDatabase"
+        },
+        "tags" : "Element,Container,DeploymentOnly",
+        "technology" : "SQL Server LocalDB"
+      } ],
+      "documentation" : { },
+      "id" : "8",
+      "name" : "PolicyService Delivery System",
+      "properties" : {
+        "structurizr.dsl.identifier" : "ss"
+      },
+      "relationships" : [ {
+        "description" : "Deploys artifact to",
+        "destinationId" : "6",
+        "id" : "29",
+        "linkedRelationshipId" : "28",
+        "sourceId" : "8"
+      }, {
+        "description" : "Deploys artifact to",
+        "destinationId" : "7",
+        "id" : "33",
+        "linkedRelationshipId" : "32",
+        "sourceId" : "8"
+      }, {
+        "description" : "Persists data to",
+        "destinationId" : "5",
+        "id" : "47",
+        "linkedRelationshipId" : "46",
+        "sourceId" : "8"
+      } ],
+      "tags" : "Element,Software System"
+    } ]
+  },
+  "name" : "PolicyService Delivery System",
+  "properties" : {
+    "structurizr.inspection.info" : "0",
+    "structurizr.inspection.ignore" : "0",
+    "structurizr.inspection.error" : "65",
+    "structurizr.inspection.warning" : "0",
+    "structurizr.dsl" : "d29ya3NwYWNlICJQb2xpY3lTZXJ2aWNlIERlbGl2ZXJ5IFN5c3RlbSIgewoKICAgIG1vZGVsIHsKCiAgICAgICAgIyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KICAgICAgICAjIFBlb3BsZQogICAgICAgICMgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCgogICAgICAgIGNvbnRyaWJ1dG9yID0gcGVyc29uICJDb250cmlidXRvciIKICAgICAgICBxYUFwcHJvdmVyID0gcGVyc29uICJRQSBFbnZpcm9ubWVudCBBcHByb3ZlciIKCgogICAgICAgICMgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCiAgICAgICAgIyBFeHRlcm5hbCBzeXN0ZW1zIC8gbG9naWNhbCBlbnZpcm9ubWVudCB0YXJnZXRzCiAgICAgICAgIwogICAgICAgICMgVGhlc2UgYXJlIHVzZWQgYnkgdGhlIFN5c3RlbSBDb250ZXh0IGFuZCBDb250YWluZXIgdmlld3MuCiAgICAgICAgIyBUaGV5IGFyZSBOT1QgU3RydWN0dXJpenIgZGVwbG95bWVudCBub2Rlcy4KICAgICAgICAjIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQoKICAgICAgICBnaXRIdWIgPSBzb2Z0d2FyZVN5c3RlbSAiR2l0SHViIgogICAgICAgIHBhY2thZ2VSZXBvc2l0b3J5ID0gZWxlbWVudCAiUGFja2FnZSBSZXBvc2l0b3J5IgogICAgICAgIGNsb3VkZmxhcmUgPSBlbGVtZW50ICJDbG91ZGZsYXJlIFIyIiB7CiAgICAgICAgICAgIHRhZ3MgIkRhdGFTdG9yZSIKICAgICAgICB9CgogICAgICAgIGRldkVudiA9IGVsZW1lbnQgIkRldiBFbnZpcm9ubWVudCIKICAgICAgICBxYUVudiA9IGVsZW1lbnQgIlFBIEVudmlyb25tZW50IgoKCiAgICAgICAgIyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KICAgICAgICAjIFBvbGljeVNlcnZpY2UgRGVsaXZlcnkgU3lzdGVtCiAgICAgICAgIyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KCiAgICAgICAgc3MgPSBzb2Z0d2FyZVN5c3RlbSAiUG9saWN5U2VydmljZSBEZWxpdmVyeSBTeXN0ZW0iIHsKCiAgICAgICAgICAgIGJ1aWxkUHJvY2VzcyA9IGNvbnRhaW5lciAiQnVpbGQgUHJvY2VzcyIKCiAgICAgICAgICAgIGJ1aWxkQXJ0aWZhY3QgPSBjb250YWluZXIgIkJ1aWxkIEFydGlmYWN0IiAiUGFja2FnZWQgQXBwbGljYXRpb24iICJaSVAgZmlsZSIgewogICAgICAgICAgICAgICAgdGFncyAiQXJ0aWZhY3QiCiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIGRldkRlcGxveW1lbnRQcm9jZXNzID0gY29udGFpbmVyICJEZXYgRGVwbG95bWVudCBQcm9jZXNzIgoKICAgICAgICAgICAgcWFEZXBsb3ltZW50UHJvY2VzcyA9IGNvbnRhaW5lciAiUUEgRGVwbG95bWVudCBQcm9jZXNzIgoKICAgICAgICAgICAgZGV2UmVhZGluZXNzUHJvY2VzcyA9IGNvbnRhaW5lciAiRGV2IERlcGxveW1lbnQgUmVhZGluZXNzIFZhbGlkYXRpb24iCgogICAgICAgICAgICBxYVJlYWRpbmVzc1Byb2Nlc3MgPSBjb250YWluZXIgIlFBIERlcGxveW1lbnQgUmVhZGluZXNzIFZhbGlkYXRpb24iCgogICAgICAgICAgICBkZWxpdmVyeUV2aWRlbmNlU3RvcmUgPSBjb250YWluZXIgIkRlbGl2ZXJ5IEV2aWRlbmNlIiB7CiAgICAgICAgICAgICAgICB0YWdzICJEZWxpdmVyeUV2aWRlbmNlIgogICAgICAgICAgICB9CgoKICAgICAgICAgICAgIyBUaGVzZSBleGlzdCBwcmltYXJpbHkgc28gdGhlIERlcGxveW1lbnQgVmlldyBjYW4gc2hvdwogICAgICAgICAgICAjIHRoZSBhY3R1YWwgcnVudGltZSB3b3JrbG9hZCBvbiB0aGUgREVWIGFuZCBRQSBydW5uZXJzLgogICAgICAgICAgICAjCiAgICAgICAgICAgICMgV2UgY2FuIGV4Y2x1ZGUgdGhlbSBmcm9tIHRoZSBsb2dpY2FsIENvbnRhaW5lciBWaWV3LgoKICAgICAgICAgICAgcG9saWN5U2VydmljZVJ1bnRpbWUgPSBjb250YWluZXIgIlBvbGljeVNlcnZpY2UiIFwKICAgICAgICAgICAgICAgICJSdW5uaW5nIFBvbGljeVNlcnZpY2UgYXBwbGljYXRpb24iIFwKICAgICAgICAgICAgICAgICJBU1AuTkVUIENvcmUiIHsKICAgICAgICAgICAgICAgIHRhZ3MgIkRlcGxveW1lbnRPbmx5IgogICAgICAgICAgICB9CgogICAgICAgICAgICBwb2xpY3lEYXRhYmFzZSA9IGNvbnRhaW5lciAiUG9saWN5IERhdGFiYXNlIiBcCiAgICAgICAgICAgICAgICAiRXBoZW1lcmFsIGRhdGFiYXNlIHVzZWQgYnkgdGhlIGRlcGxveWVkIFBvbGljeVNlcnZpY2UiIFwKICAgICAgICAgICAgICAgICJTUUwgU2VydmVyIExvY2FsREIiIHsKICAgICAgICAgICAgICAgIHRhZ3MgIkRlcGxveW1lbnRPbmx5IgogICAgICAgICAgICB9CiAgICAgICAgfQoKCiAgICAgICAgIyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KICAgICAgICAjIEV4dGVybmFsIHJlbGF0aW9uc2hpcHMKICAgICAgICAjIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQoKICAgICAgICBjb250cmlidXRvciAtPiBnaXRIdWIgIlN1Ym1pdHMgYW5kIHJldmlld3MgcmVwb3NpdG9yeSBjaGFuZ2VzIgoKICAgICAgICBnaXRIdWIgLT4gYnVpbGRQcm9jZXNzICJUcmlnZ2VycyBidWlsZCBwcm9jZXNzIgoKICAgICAgICBxYUFwcHJvdmVyIC0+IHFhRGVwbG95bWVudFByb2Nlc3MgIkFwcHJvdmVzIFFBIGRlcGxveW1lbnQiCgogICAgICAgIHBhY2thZ2VSZXBvc2l0b3J5IC0+IGJ1aWxkUHJvY2VzcyAiUHJvdmlkZXMgZGVwZW5kZW5jeSBwYWNrYWdlcyIKCgogICAgICAgICMgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCiAgICAgICAgIyBEZWxpdmVyeS1zeXN0ZW0gcmVsYXRpb25zaGlwcwogICAgICAgICMgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCgogICAgICAgIGJ1aWxkUHJvY2VzcyAtPiBkZXZEZXBsb3ltZW50UHJvY2VzcyBcCiAgICAgICAgICAgICJTdWNjZXNzZnVsIGJ1aWxkIHRyaWdnZXJzIERFViBkZXBsb3ltZW50IgoKICAgICAgICBidWlsZFByb2Nlc3MgLT4gYnVpbGRBcnRpZmFjdCBcCiAgICAgICAgICAgICJQcm9kdWNlcyBpbW11dGFibGUgYXJ0aWZhY3QiCgogICAgICAgIGRldkRlcGxveW1lbnRQcm9jZXNzIC0+IGJ1aWxkQXJ0aWZhY3QgXAogICAgICAgICAgICAiUmV0cmlldmVzL2NvbnN1bWVzIGltbXV0YWJsZSBhcnRpZmFjdCIKCiAgICAgICAgZGV2RGVwbG95bWVudFByb2Nlc3MgLT4gZGV2RW52IFwKICAgICAgICAgICAgIkRlcGxveXMgYXJ0aWZhY3QgdG8iCgogICAgICAgIGRldkRlcGxveW1lbnRQcm9jZXNzIC0+IHFhRGVwbG95bWVudFByb2Nlc3MgXAogICAgICAgICAgICAiUHJvbXB0cyBRQSBkZXBsb3ltZW50IGFwcHJvdmFsIgoKICAgICAgICBxYURlcGxveW1lbnRQcm9jZXNzIC0+IGJ1aWxkQXJ0aWZhY3QgXAogICAgICAgICAgICAiUmV0cmlldmVzL2NvbnN1bWVzIGltbXV0YWJsZSBhcnRpZmFjdCIKCiAgICAgICAgcWFEZXBsb3ltZW50UHJvY2VzcyAtPiBxYUVudiBcCiAgICAgICAgICAgICJEZXBsb3lzIGFydGlmYWN0IHRvIgoKICAgICAgICBkZXZSZWFkaW5lc3NQcm9jZXNzIC0+IGRldkVudiBcCiAgICAgICAgICAgICJFdmFsdWF0ZXMiCgogICAgICAgIHFhUmVhZGluZXNzUHJvY2VzcyAtPiBxYUVudiBcCiAgICAgICAgICAgICJFdmFsdWF0ZXMiCgoKICAgICAgICAjIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogICAgICAgICMgUnVudGltZSByZWxhdGlvbnNoaXBzCiAgICAgICAgIwogICAgICAgICMgVGhlc2UgYXJlIGltcG9ydGFudCBmb3IgdGhlIERlcGxveW1lbnQgVmlldy4KICAgICAgICAjIERlcGxveW1lbnQgZ3JvdXBzIGJlbG93IHdpbGwgZW5zdXJlIHRoYXQgREVWIHByb2Nlc3NlcyBjb25uZWN0IHRvCiAgICAgICAgIyB0aGUgREVWIFBvbGljeVNlcnZpY2UgaW5zdGFuY2UgYW5kIFFBIHByb2Nlc3NlcyBjb25uZWN0IHRvIFFBLgogICAgICAgICMgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCgogICAgICAgIGRldkRlcGxveW1lbnRQcm9jZXNzIC0+IHBvbGljeVNlcnZpY2VSdW50aW1lIFwKICAgICAgICAgICAgIkRlcGxveXMgYW5kIHN0YXJ0cyIKCiAgICAgICAgcWFEZXBsb3ltZW50UHJvY2VzcyAtPiBwb2xpY3lTZXJ2aWNlUnVudGltZSBcCiAgICAgICAgICAgICJEZXBsb3lzIGFuZCBzdGFydHMiCgogICAgICAgIGRldlJlYWRpbmVzc1Byb2Nlc3MgLT4gcG9saWN5U2VydmljZVJ1bnRpbWUgXAogICAgICAgICAgICAiRXZhbHVhdGVzIGhlYWx0aCBhbmQgcmVhZGluZXNzIgoKICAgICAgICBxYVJlYWRpbmVzc1Byb2Nlc3MgLT4gcG9saWN5U2VydmljZVJ1bnRpbWUgXAogICAgICAgICAgICAiRXZhbHVhdGVzIGhlYWx0aCBhbmQgcmVhZGluZXNzIgoKICAgICAgICBwb2xpY3lTZXJ2aWNlUnVudGltZSAtPiBwb2xpY3lEYXRhYmFzZSBcCiAgICAgICAgICAgICJVc2VzIgoKCiAgICAgICAgIyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KICAgICAgICAjIERlbGl2ZXJ5IGV2aWRlbmNlIHJlbGF0aW9uc2hpcHMKICAgICAgICAjIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQoKICAgICAgICBidWlsZFByb2Nlc3MgLT4gZGVsaXZlcnlFdmlkZW5jZVN0b3JlIFwKICAgICAgICAgICAgIlJlY29yZHMgYXJ0aWZhY3QgaWRlbnRpdHkiCgogICAgICAgIGRldkRlcGxveW1lbnRQcm9jZXNzIC0+IGRlbGl2ZXJ5RXZpZGVuY2VTdG9yZSBcCiAgICAgICAgICAgICJSZWNvcmRzIERFViBkZXBsb3ltZW50IHJlc3VsdCIKCiAgICAgICAgZGV2UmVhZGluZXNzUHJvY2VzcyAtPiBkZWxpdmVyeUV2aWRlbmNlU3RvcmUgXAogICAgICAgICAgICAiUmVjb3JkcyBERVYgcmVhZGluZXNzIGV2aWRlbmNlIgoKICAgICAgICBxYURlcGxveW1lbnRQcm9jZXNzIC0+IGRlbGl2ZXJ5RXZpZGVuY2VTdG9yZSBcCiAgICAgICAgICAgICJSZWNvcmRzIFFBIGRlcGxveW1lbnQgcmVzdWx0IgoKICAgICAgICBxYVJlYWRpbmVzc1Byb2Nlc3MgLT4gZGVsaXZlcnlFdmlkZW5jZVN0b3JlIFwKICAgICAgICAgICAgIlJlY29yZHMgUUEgcmVhZGluZXNzIGV2aWRlbmNlIgoKICAgICAgICBkZWxpdmVyeUV2aWRlbmNlU3RvcmUgLT4gY2xvdWRmbGFyZSBcCiAgICAgICAgICAgICJQZXJzaXN0cyBkYXRhIHRvIgoKCiAgICAgICAgIyA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KICAgICAgICAjIERFUExPWU1FTlQgTU9ERUwKICAgICAgICAjID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQogICAgICAgICMKICAgICAgICAjIFRoaXMgcmVwcmVzZW50cyBvbmUgZXhlY3V0aW9uIG9mIG91ciBDSS9DRCB0b3BvbG9neS4KICAgICAgICAjCiAgICAgICAgIyBERVYgYW5kIFFBIGFyZSByZXByZXNlbnRlZCBhcyBkaWZmZXJlbnQgZGVwbG95bWVudCBncm91cHMgc28gdGhhdAogICAgICAgICMgU3RydWN0dXJpenIgZG9lcyBub3QgYWNjaWRlbnRhbGx5IGNvbm5lY3QgREVWIHByb2Nlc3MgaW5zdGFuY2VzIHRvCiAgICAgICAgIyBRQSBydW50aW1lL2RhdGFiYXNlIGluc3RhbmNlcyBhbmQgdmljZSB2ZXJzYS4KICAgICAgICAjID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQoKICAgICAgICBwaXBlbGluZUV4ZWN1dGlvbiA9IGRlcGxveW1lbnRFbnZpcm9ubWVudCAiUGlwZWxpbmUgRXhlY3V0aW9uIiB7CgogICAgICAgICAgICBkZXZHcm91cCA9IGRlcGxveW1lbnRHcm91cCAiREVWIgogICAgICAgICAgICBxYUdyb3VwID0gZGVwbG95bWVudEdyb3VwICJRQSIKCgogICAgICAgICAgICBnaXRodWJQbGF0Zm9ybSA9IGRlcGxveW1lbnROb2RlIFwKICAgICAgICAgICAgICAgICJHaXRIdWIgQWN0aW9ucyIgXAogICAgICAgICAgICAgICAgIkhvc3RlZCBDSS9DRCBleGVjdXRpb24gaW5mcmFzdHJ1Y3R1cmUiIFwKICAgICAgICAgICAgICAgICJHaXRIdWIgQWN0aW9ucyIgewoKCiAgICAgICAgICAgICAgICAjIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KICAgICAgICAgICAgICAgICMgU2hhcmVkIEdpdEh1YiBpbmZyYXN0cnVjdHVyZQogICAgICAgICAgICAgICAgIyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCgogICAgICAgICAgICAgICAgYXJ0aWZhY3RTdG9yYWdlID0gaW5mcmFzdHJ1Y3R1cmVOb2RlIFwKICAgICAgICAgICAgICAgICAgICAiV29ya2Zsb3cgQXJ0aWZhY3QgU3RvcmFnZSIgXAogICAgICAgICAgICAgICAgICAgICJTdG9yZXMgdGhlIGltbXV0YWJsZSBQb2xpY3lTZXJ2aWNlIGJ1aWxkIGFydGlmYWN0IiBcCiAgICAgICAgICAgICAgICAgICAgIkdpdEh1YiBBY3Rpb25zIEFydGlmYWN0cyIKCiAgICAgICAgICAgICAgICBxYUFwcHJvdmFsR2F0ZSA9IGluZnJhc3RydWN0dXJlTm9kZSBcCiAgICAgICAgICAgICAgICAgICAgIlFBIEVudmlyb25tZW50IEFwcHJvdmFsIiBcCiAgICAgICAgICAgICAgICAgICAgIlJlcXVpcmVzIGFwcHJvdmFsIGJlZm9yZSB0aGUgUUEgZGVwbG95bWVudCBqb2IgZXhlY3V0ZXMiIFwKICAgICAgICAgICAgICAgICAgICAiR2l0SHViIEVudmlyb25tZW50IgoKCiAgICAgICAgICAgICAgICAjIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KICAgICAgICAgICAgICAgICMgQlVJTEQKICAgICAgICAgICAgICAgICMgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQoKICAgICAgICAgICAgICAgIGJ1aWxkUnVubmVyID0gZGVwbG95bWVudE5vZGUgXAogICAgICAgICAgICAgICAgICAgICJCdWlsZCBSdW5uZXIiIFwKICAgICAgICAgICAgICAgICAgICAiRXBoZW1lcmFsIEdpdEh1Yi1ob3N0ZWQgV2luZG93cyBydW5uZXIiIFwKICAgICAgICAgICAgICAgICAgICAid2luZG93cy1sYXRlc3QiIHsKCiAgICAgICAgICAgICAgICAgICAgYnVpbGRJbnN0YW5jZSA9IGNvbnRhaW5lckluc3RhbmNlIGJ1aWxkUHJvY2VzcwogICAgICAgICAgICAgICAgfQoKCiAgICAgICAgICAgICAgICAjIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KICAgICAgICAgICAgICAgICMgREVWCiAgICAgICAgICAgICAgICAjIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KCiAgICAgICAgICAgICAgICBkZXZSdW5uZXIgPSBkZXBsb3ltZW50Tm9kZSBcCiAgICAgICAgICAgICAgICAgICAgIkRFViBSdW5uZXIiIFwKICAgICAgICAgICAgICAgICAgICAiRXBoZW1lcmFsIEdpdEh1Yi1ob3N0ZWQgV2luZG93cyBydW5uZXIiIFwKICAgICAgICAgICAgICAgICAgICAid2luZG93cy1sYXRlc3QiIHsKCiAgICAgICAgICAgICAgICAgICAgZGVwbG95bWVudEdyb3VwIGRldkdyb3VwCgogICAgICAgICAgICAgICAgICAgIGRldkRlcGxveUluc3RhbmNlID0gY29udGFpbmVySW5zdGFuY2UgZGV2RGVwbG95bWVudFByb2Nlc3MKCiAgICAgICAgICAgICAgICAgICAgZGV2UmVhZGluZXNzSW5zdGFuY2UgPSBjb250YWluZXJJbnN0YW5jZSBkZXZSZWFkaW5lc3NQcm9jZXNzCgogICAgICAgICAgICAgICAgICAgIGRldlBvbGljeVNlcnZpY2VJbnN0YW5jZSA9IGNvbnRhaW5lckluc3RhbmNlIHBvbGljeVNlcnZpY2VSdW50aW1lCgogICAgICAgICAgICAgICAgICAgIGRldkRhdGFiYXNlSW5zdGFuY2UgPSBjb250YWluZXJJbnN0YW5jZSBwb2xpY3lEYXRhYmFzZQogICAgICAgICAgICAgICAgfQoKCiAgICAgICAgICAgICAgICAjIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KICAgICAgICAgICAgICAgICMgUUEKICAgICAgICAgICAgICAgICMgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQoKICAgICAgICAgICAgICAgIHFhUnVubmVyID0gZGVwbG95bWVudE5vZGUgXAogICAgICAgICAgICAgICAgICAgICJRQSBSdW5uZXIiIFwKICAgICAgICAgICAgICAgICAgICAiRXBoZW1lcmFsIEdpdEh1Yi1ob3N0ZWQgV2luZG93cyBydW5uZXIiIFwKICAgICAgICAgICAgICAgICAgICAid2luZG93cy1sYXRlc3QiIHsKCiAgICAgICAgICAgICAgICAgICAgZGVwbG95bWVudEdyb3VwIHFhR3JvdXAKCiAgICAgICAgICAgICAgICAgICAgcWFEZXBsb3lJbnN0YW5jZSA9IGNvbnRhaW5lckluc3RhbmNlIHFhRGVwbG95bWVudFByb2Nlc3MKCiAgICAgICAgICAgICAgICAgICAgcWFSZWFkaW5lc3NJbnN0YW5jZSA9IGNvbnRhaW5lckluc3RhbmNlIHFhUmVhZGluZXNzUHJvY2VzcwoKICAgICAgICAgICAgICAgICAgICBxYVBvbGljeVNlcnZpY2VJbnN0YW5jZSA9IGNvbnRhaW5lckluc3RhbmNlIHBvbGljeVNlcnZpY2VSdW50aW1lCgogICAgICAgICAgICAgICAgICAgIHFhRGF0YWJhc2VJbnN0YW5jZSA9IGNvbnRhaW5lckluc3RhbmNlIHBvbGljeURhdGFiYXNlCiAgICAgICAgICAgICAgICB9CgoKICAgICAgICAgICAgICAgICMgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogICAgICAgICAgICAgICAgIyBEZXBsb3ltZW50LXNwZWNpZmljIHJlbGF0aW9uc2hpcHMKICAgICAgICAgICAgICAgICMKICAgICAgICAgICAgICAgICMgVGhlc2UgZGVzY3JpYmUgR2l0SHViIGluZnJhc3RydWN0dXJlIHJhdGhlciB0aGFuIGxvZ2ljYWwKICAgICAgICAgICAgICAgICMgYXBwbGljYXRpb24gcmVsYXRpb25zaGlwcywgc28gdGhleSBiZWxvbmcgaGVyZS4KICAgICAgICAgICAgICAgICMgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQoKICAgICAgICAgICAgICAgIGJ1aWxkSW5zdGFuY2UgLT4gYXJ0aWZhY3RTdG9yYWdlIFwKICAgICAgICAgICAgICAgICAgICAiUHVibGlzaGVzIGltbXV0YWJsZSBhcnRpZmFjdCIKCiAgICAgICAgICAgICAgICBhcnRpZmFjdFN0b3JhZ2UgLT4gZGV2RGVwbG95SW5zdGFuY2UgXAogICAgICAgICAgICAgICAgICAgICJTdXBwbGllcyBpbW11dGFibGUgYXJ0aWZhY3QiCgogICAgICAgICAgICAgICAgZGV2UmVhZGluZXNzSW5zdGFuY2UgLT4gcWFBcHByb3ZhbEdhdGUgXAogICAgICAgICAgICAgICAgICAgICJNYWtlcyBidWlsZCBlbGlnaWJsZSBmb3IgUUEgYXBwcm92YWwiCgogICAgICAgICAgICAgICAgcWFBcHByb3ZhbEdhdGUgLT4gcWFEZXBsb3lJbnN0YW5jZSBcCiAgICAgICAgICAgICAgICAgICAgIlJlbGVhc2VzIFFBIGRlcGxveW1lbnQgYWZ0ZXIgYXBwcm92YWwiCgogICAgICAgICAgICAgICAgYXJ0aWZhY3RTdG9yYWdlIC0+IHFhRGVwbG95SW5zdGFuY2UgXAogICAgICAgICAgICAgICAgICAgICJTdXBwbGllcyBzYW1lIGltbXV0YWJsZSBhcnRpZmFjdCIKICAgICAgICAgICAgfQogICAgICAgIH0KICAgIH0KCgogICAgdmlld3MgewoKICAgICAgICAjIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogICAgICAgICMgU3lzdGVtIENvbnRleHQKICAgICAgICAjIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQoKICAgICAgICBzeXN0ZW1Db250ZXh0IHNzICJTeXN0ZW1Db250ZXh0IiB7CiAgICAgICAgICAgIGluY2x1ZGUgKgogICAgICAgICAgICBpbmNsdWRlICItPmNvbnRyaWJ1dG9yLT4iCiAgICAgICAgfQoKCiAgICAgICAgIyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KICAgICAgICAjIENvbnRhaW5lciAvIExvZ2ljYWwgVmlldwogICAgICAgICMKICAgICAgICAjIFRoZSBydW50aW1lIGFuZCBEQiBjb250YWluZXJzIGFyZSBvbWl0dGVkIGJlY2F1c2UgdGhpcyBkaWFncmFtIGlzCiAgICAgICAgIyBmb2N1c2VkIG9uIGRlbGl2ZXJ5LXN5c3RlbSByZXNwb25zaWJpbGl0aWVzLgogICAgICAgICMgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCgogICAgICAgIGNvbnRhaW5lciBzcyAiQ29udGFpbmVyVmlldyIgewogICAgICAgICAgICBpbmNsdWRlICoKCiAgICAgICAgICAgIGV4Y2x1ZGUgcG9saWN5U2VydmljZVJ1bnRpbWUKICAgICAgICAgICAgZXhjbHVkZSBwb2xpY3lEYXRhYmFzZQogICAgICAgIH0KCgogICAgICAgICMgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCiAgICAgICAgIyBEZXBsb3ltZW50IFZpZXcKICAgICAgICAjIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQoKICAgICAgICBkZXBsb3ltZW50IHNzIHBpcGVsaW5lRXhlY3V0aW9uICJEZXBsb3ltZW50VmlldyIgewogICAgICAgICAgICBpbmNsdWRlICoKICAgICAgICB9CgoKICAgICAgICAjIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogICAgICAgICMgU3R5bGVzCiAgICAgICAgIyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KCiAgICAgICAgc3R5bGVzIHsKCiAgICAgICAgICAgIGVsZW1lbnQgIkFydGlmYWN0IiB7CiAgICAgICAgICAgICAgICBtZXRhZGF0YSBmYWxzZQogICAgICAgICAgICAgICAgc2hhcGUgRm9sZGVyCiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kICM4ODg4ODgKICAgICAgICAgICAgICAgIGNvbG9yICNmZmZmZmYKICAgICAgICAgICAgfQoKICAgICAgICAgICAgZWxlbWVudCAiRGVsaXZlcnlFdmlkZW5jZSIgewogICAgICAgICAgICAgICAgbWV0YWRhdGEgZmFsc2UKICAgICAgICAgICAgICAgIHNoYXBlIEZvbGRlcgogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAjODg4ODg4CiAgICAgICAgICAgICAgICBjb2xvciAjZmZmZmZmCiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIGVsZW1lbnQgIkRhdGFTdG9yZSIgewogICAgICAgICAgICAgICAgbWV0YWRhdGEgZmFsc2UKICAgICAgICAgICAgICAgIHNoYXBlIEN5bGluZGVyCiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICB9Cn0="
+  },
+  "views" : {
+    "configuration" : {
+      "lastSavedView" : "DeploymentView",
+      "metadataSymbols" : "SquareBrackets",
+      "styles" : {
+        "elements" : [ {
+          "background" : "#888888",
+          "color" : "#ffffff",
+          "metadata" : false,
+          "shape" : "Folder",
+          "tag" : "Artifact"
+        }, {
+          "metadata" : false,
+          "shape" : "Cylinder",
+          "tag" : "DataStore"
+        }, {
+          "background" : "#888888",
+          "color" : "#ffffff",
+          "metadata" : false,
+          "shape" : "Folder",
+          "tag" : "DeliveryEvidence"
+        } ]
+      },
+      "terminology" : { }
+    },
+    "containerViews" : [ {
+      "dimensions" : {
+        "height" : 5058,
+        "width" : 5710
+      },
+      "elements" : [ {
+        "id" : "2",
+        "x" : 200,
+        "y" : 3145
+      }, {
+        "id" : "3",
+        "x" : 191,
+        "y" : 2252
+      }, {
+        "id" : "4",
+        "x" : 246,
+        "y" : 1647
+      }, {
+        "id" : "5",
+        "x" : 4410,
+        "y" : 2415
+      }, {
+        "id" : "6",
+        "x" : 4405,
+        "y" : 1655
+      }, {
+        "id" : "7",
+        "x" : 4355,
+        "y" : 3220
+      }, {
+        "id" : "9",
+        "x" : 1295,
+        "y" : 2020
+      }, {
+        "id" : "10",
+        "x" : 1260,
+        "y" : 2795
+      }, {
+        "id" : "11",
+        "x" : 2495,
+        "y" : 1690
+      }, {
+        "id" : "12",
+        "x" : 2475,
+        "y" : 3145
+      }, {
+        "id" : "13",
+        "x" : 3645,
+        "y" : 2090
+      }, {
+        "id" : "14",
+        "x" : 3620,
+        "y" : 2925
+      }, {
+        "id" : "15",
+        "x" : 2965,
+        "y" : 2445
+      } ],
+      "externalSoftwareSystemBoundariesVisible" : false,
+      "key" : "ContainerView",
+      "name" : "Container View: PolicyService Delivery System",
+      "order" : 2,
+      "relationships" : [ {
+        "id" : "19"
+      }, {
+        "id" : "21"
+      }, {
+        "id" : "23"
+      }, {
+        "id" : "25"
+      }, {
+        "id" : "26"
+      }, {
+        "id" : "27"
+      }, {
+        "id" : "28"
+      }, {
+        "id" : "30"
+      }, {
+        "id" : "31"
+      }, {
+        "id" : "32"
+      }, {
+        "id" : "34"
+      }, {
+        "id" : "35"
+      }, {
+        "id" : "41",
+        "vertices" : [ {
+          "x" : 2215,
+          "y" : 2875
+        } ]
+      }, {
+        "id" : "42"
+      }, {
+        "id" : "43"
+      }, {
+        "id" : "44"
+      }, {
+        "id" : "45"
+      }, {
+        "id" : "46"
+      } ],
+      "softwareSystemId" : "8"
+    } ],
+    "deploymentViews" : [ {
+      "dimensions" : {
+        "height" : 2598,
+        "width" : 3385
+      },
+      "elements" : [ {
+        "id" : "48",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "49",
+        "x" : 460,
+        "y" : 1020
+      }, {
+        "id" : "50",
+        "x" : 475,
+        "y" : 1775
+      }, {
+        "id" : "51",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "52",
+        "x" : 470,
+        "y" : 275
+      }, {
+        "id" : "53",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "54",
+        "x" : 1830,
+        "y" : 280
+      }, {
+        "id" : "55",
+        "x" : 1829,
+        "y" : 679
+      }, {
+        "id" : "56",
+        "x" : 2609,
+        "y" : 259
+      }, {
+        "id" : "59",
+        "x" : 2604,
+        "y" : 679
+      }, {
+        "id" : "61",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "62",
+        "x" : 1844,
+        "y" : 1764
+      }, {
+        "id" : "63",
+        "x" : 1844,
+        "y" : 1319
+      }, {
+        "id" : "64",
+        "x" : 2634,
+        "y" : 1314
+      }, {
+        "id" : "67",
+        "x" : 2634,
+        "y" : 1799
+      } ],
+      "environment" : "Pipeline Execution",
+      "key" : "DeploymentView",
+      "name" : "Deployment View: PolicyService Delivery System - Pipeline Execution",
+      "order" : 3,
+      "relationships" : [ {
+        "id" : "57"
+      }, {
+        "id" : "58"
+      }, {
+        "id" : "60"
+      }, {
+        "id" : "65"
+      }, {
+        "id" : "66"
+      }, {
+        "id" : "68"
+      }, {
+        "id" : "69"
+      }, {
+        "id" : "70"
+      }, {
+        "id" : "71"
+      }, {
+        "id" : "72"
+      }, {
+        "id" : "73",
+        "vertices" : [ {
+          "x" : 1320,
+          "y" : 1680
+        } ]
+      } ],
+      "softwareSystemId" : "8"
+    } ],
+    "systemContextViews" : [ {
+      "elements" : [ {
+        "id" : "1",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "2",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "3",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "4",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "5",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "6",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "7",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "8",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "enterpriseBoundaryVisible" : true,
+      "key" : "SystemContext",
+      "name" : "System Context View: PolicyService Delivery System",
+      "order" : 1,
+      "relationships" : [ {
+        "id" : "18"
+      }, {
+        "id" : "20"
+      }, {
+        "id" : "22"
+      }, {
+        "id" : "24"
+      }, {
+        "id" : "29"
+      }, {
+        "id" : "33"
+      }, {
+        "id" : "47"
+      } ],
+      "softwareSystemId" : "8"
+    } ]
+  }
+}

@@ -1,4 +1,4 @@
-**Week 1**
+# Week 1 Lab: Think in Delivery Systems
 
 The workbook’s intent is specifically to build **one coherent repository** over the full ten weeks, with each week adding engineering capability and a communication artifact. Week 1 is about reasoning about delivery as an end-to-end system, not merely learning how to write a pipeline.
 
@@ -130,7 +130,7 @@ Next, let’s scaffold the solution exactly around the Week 1 requirements: a sm
 Run this from:
 
 ```PowerShell
-C:\Users\stith_b\source\repos\technical-leadership-lab
+****\technical-leadership-lab
 ```
 
 ```PowerShell
@@ -171,7 +171,7 @@ dotnet test
 
 It should look something like this:
 
-PS C:\Users\stith_b\source\repos\technical-leadership-lab> dotnet build
+PS ****\technical-leadership-lab> dotnet build
 Restore complete (18.2s)
   PolicyService succeeded (12.0s) → src\PolicyService\bin\Debug\net9.0\PolicyService.dll
   PolicyService.Tests succeeded (2.6s) → tests\PolicyService.Tests\bin\Debug\net9.0\PolicyService.Tests.dll
@@ -179,11 +179,11 @@ Restore complete (18.2s)
 Build succeeded in 34.7s
 
 Workload updates are available. Run dotnet workload list for more information.
-PS C:\Users\stith_b\source\repos\technical-leadership-lab> dotnet test 
+PS ****\technical-leadership-lab> dotnet test 
 Restore complete (2.1s)
   PolicyService succeeded (1.0s) → src\PolicyService\bin\Debug\net9.0\PolicyService.dll
   PolicyService.Tests succeeded (0.3s) → tests\PolicyService.Tests\bin\Debug\net9.0\PolicyService.Tests.dll
-Test Parallelization enabled for C:\Users\stith_b\source\repos\technical-leadership-lab\tests\PolicyService.Tests\bin\Debug\net9.0\PolicyService.Tests.dll (Workers: 8, Scope: MethodLevel)
+Test Parallelization enabled for ****\technical-leadership-lab\tests\PolicyService.Tests\bin\Debug\net9.0\PolicyService.Tests.dll (Workers: 8, Scope: MethodLevel)
   PolicyService.Tests test succeeded (3.1s)
 
 Test summary: total: 1, failed: 0, succeeded: 1, skipped: 0, duration: 3.0s
