@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageReference Include="MSTest" Version="3.6.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.17" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,6 +18,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\PolicyService\PolicyService.csproj" />
+    <ProjectReference Include="..\..\tools\RiskScoreStub\RiskScoreStub.csproj" />
+    <ProjectReference Include="..\..\tools\EmailServiceStub\EmailServiceStub.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,11 @@
+{
+    "id":18,
+    "policyHolderName":"Crush",
+    "lineOfBusiness":"Fire",
+    "createdAt":"2026-10-29T20:48:21.2152179+00:00",
+    "policyNumber":"POL000000067",
+    "termNumber":1,
+    "effectiveDate":"0001-01-01",
+    "expirationDate":"0002-01-01",
+    "ResponseTime":"465ms"
+}

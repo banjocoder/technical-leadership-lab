@@ -1,0 +1,48 @@
+System.InvalidOperationException: Failed to open database connection.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): Cannot open database "PolicyDb" requested by the login. The login failed.
+Login failed for user '******'.
+   at Microsoft.Data.SqlClient.Connection.SqlConnectionInternal.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.TdsParser.Run(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj)
+   at Microsoft.Data.SqlClient.Connection.SqlConnectionInternal.CompleteLogin(Boolean enlistOK)
+   at Microsoft.Data.SqlClient.Connection.SqlConnectionInternal.AttemptOneLogin(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, TimeoutTimer timeout, Boolean withFailover)
+   at Microsoft.Data.SqlClient.Connection.SqlConnectionInternal.LoginNoFailover(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionOptions connectionOptions, SqlCredential credential, TimeoutTimer timeout)
+   at Microsoft.Data.SqlClient.Connection.SqlConnectionInternal.OpenLoginEnlist(TimeoutTimer timeout, SqlConnectionOptions connectionOptions, SqlCredential credential, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance)
+   at Microsoft.Data.SqlClient.Connection.SqlConnectionInternal..ctor(DbConnectionPoolIdentity identity, SqlConnectionOptions connectionOptions, TimeoutTimer timeout, SqlCredential credential, DbConnectionPoolGroupProviderInfo providerInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SessionData reconnectSessionData, Boolean applyTransientFaultHandling, String accessToken, IDbConnectionPool pool, Func`3 accessTokenCallback, SspiContextProvider sspiContextProvider, ISqlClientMetrics metrics, RegisteredApplication registeredApplication)
+   at Microsoft.Data.SqlClient.SqlConnectionFactory.CreateConnection(SqlConnectionOptions options, ConnectionPoolKey poolKey, DbConnectionPoolGroupProviderInfo poolGroupProviderInfo, IDbConnectionPool pool, DbConnection owningConnection, TimeoutTimer timeout)
+   at Microsoft.Data.SqlClient.SqlConnectionFactory.CreatePooledConnection(DbConnection owningConnection, IDbConnectionPool pool, TimeoutTimer timeout)
+   at Microsoft.Data.SqlClient.ConnectionPool.WaitHandleDbConnectionPool.CreateObject(DbConnection owningObject, DbConnectionInternal oldConnection, TimeoutTimer timeout)
+   at Microsoft.Data.SqlClient.ConnectionPool.WaitHandleDbConnectionPool.UserCreateRequest(DbConnection owningObject, TimeoutTimer timeout, DbConnectionInternal oldConnection)
+   at Microsoft.Data.SqlClient.ConnectionPool.WaitHandleDbConnectionPool.TryGetConnection(DbConnection owningObject, UInt32 waitForMultipleObjectsTimeout, Boolean allowCreate, Boolean onlyOneCheckConnection, TimeoutTimer timeout, DbConnectionInternal& connection)
+   at Microsoft.Data.SqlClient.ConnectionPool.WaitHandleDbConnectionPool.WaitForPendingOpen()
+--- End of stack trace from previous location ---
+   at PolicyService.Services.PolicyDatabase.OpenConnectionAsync(CancellationToken cancellationToken) in ****\technical-leadership-lab\src\PolicyService\Services\PolicyDatabase.cs:line 32
+ClientConnectionId:01b1006e-f9e9-4d6c-8a33-50ba327d4317
+Error Number:4060,State:1,Class:11
+   --- End of inner exception stack trace ---
+   at PolicyService.Services.PolicyDatabase.OpenConnectionAsync(CancellationToken cancellationToken) in ****\technical-leadership-lab\src\PolicyService\Services\PolicyDatabase.cs:line 38
+   at PolicyService.Services.PolicyDatabase.VerifyIssuanceDependencyAsync(CancellationToken cancellationToken) in ****\technical-leadership-lab\src\PolicyService\Services\PolicyDatabase.cs:line 50
+   at PolicyService.Services.PolicyIssuanceService.ValidateDatabaseAsync(Activity issuance, CancellationToken cancellationToken) in ****\technical-leadership-lab\src\PolicyService\Services\PolicyIssuanceService.cs:line 141
+   at PolicyService.Services.PolicyIssuanceService.BeginPolicyIssuanceProcedureAsync(CreatePolicyRequest request, CancellationToken cancellationToken) in ****\technical-leadership-lab\src\PolicyService\Services\PolicyIssuanceService.cs:line 51
+   at PolicyService.Endpoints.PolicyEndpoints.<>c.<<MapPolicyEndpoints>b__0_1>d.MoveNext() in ****\technical-leadership-lab\src\PolicyService\Endpoints\PolicyEndpoints.cs:line 47
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.<>c__DisplayClass101_2.<<HandleRequestBodyAndCompileRequestDelegateForJson>b__2>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
+
+HEADERS
+=======
+Accept: */*
+Connection: keep-alive
+Host: localhost:5006
+User-Agent: PostmanRuntime/7.53.0
+bAccept-Encoding: gzip, deflate, br
+Cache-Control: no-cache
+Content-Type: application/json
+Content-Length: 66
+Idempotency-Key: 1185C193-3D2A-41D5-9969-C5F16D06C3C9
+Postman-Token: e9add0e6-5a2d-49b5-b3cf-98da927a48a6
+
+Response Time: 12.14s
