@@ -11,11 +11,13 @@ public class PolicyServiceTests
     {
         var store = new PolicyStore();
 
-        var request = new CreatePolicyRequest(
-            "Jane Doe",
-            "Homeowners");
 
-        var policy = store.CreatePolicy(request);
+        var policy = store.CreatePolicy(
+            new CreatePolicyRequest(
+                "Jane Doe",
+                "Homeowners",
+                new Guid(),
+                new DateTime()));
 
         Assert.AreEqual(1, policy.Id);
         Assert.AreEqual("Jane Doe", policy.PolicyHolderName);
@@ -30,7 +32,9 @@ public class PolicyServiceTests
         var created = store.CreatePolicy(
             new CreatePolicyRequest(
                 "Jane Doe",
-                "Auto"));
+                "Homeowners",
+                new Guid(),
+                new DateTime()));
 
         var retrieved = store.GetPolicy(created.Id);
 
