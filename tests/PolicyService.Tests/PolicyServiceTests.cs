@@ -17,7 +17,7 @@ public class PolicyServiceTests
                 "Jane Doe",
                 "Homeowners",
                 new Guid(),
-                new DateTime()));
+                DateOnly.FromDateTime(DateTime.Today)));
 
         Assert.AreEqual(1, policy.Id);
         Assert.AreEqual("Jane Doe", policy.PolicyHolderName);
@@ -34,7 +34,7 @@ public class PolicyServiceTests
                 "Jane Doe",
                 "Homeowners",
                 new Guid(),
-                new DateTime()));
+                DateOnly.FromDateTime(DateTime.Today)));
 
         var retrieved = store.GetPolicy(created.Id);
 
